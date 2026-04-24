@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoC Tracker</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui;
+            background: linear-gradient(135deg, #0a0f1a, #0f172a);
+            color: white;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; margin-bottom: 5px; }
+        .sub { text-align: center; color: #94a3b8; margin-bottom: 20px; font-size: 14px; }
+        
+        /* Status Bar */
+        .status-bar {
+            background: rgba(30,41,59,0.8);
+            border-radius: 16px;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .online { color: #4ade80; }
+        .offline { color: #f87171; }
+        
+        /* Card */
+        .card {
+            background: rgba(30,41,59,0.5);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        /* Input */
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 40px;
+            border: none;
+            background: #1e293b;
+            color: white;
+        }
+        button {
+            padding: 12px 24px;
+            background: #f59e0b;
+            border: none;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:active { transform: scale(0.97); }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .tab {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        .tab.active { background: #f59e0b; color: black; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow-x: auto;
+            display: block;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        th { color: #fbbf24; }
+        
+        /* War */
+        .war-score {
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 15px;
+        }
+        .team-score { font-size: 28px; font-weight: bold; color: #fbbf24; }
+        
+        .info-box {
+            background: #0f172a;
+            padding: 16px;
+            border-radius: 16px;
+            line-height: 1.6;
+        }
+        .error { color: #f87171; background: rgba(220,38,38,0.2); padding: 12px; border-radius: 12px; }
+        .loading { text-align: center; padding: 40px; color: #94a3b8; }
+        
+        @media (max-width: 768px) {
+            .war-score { flex-direction: column; gap: 10px; }
+            th, td { font-size: 11px; padding: 6px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🏰 CoC Tracker</h1>
+    <div class="sub">Panel Pterodactyl | IP Tetap | Real-time</div>
+    
+    <!-- Status -->
+    <div class="status-bar">
+        <span>📡 Panel: <span id="panelStatus" class="offline">● Cek...</span></span>
+        <span>🔑 Token: <span id="tokenStatus">-</span></span>
+        <span>🌐 IP: <span id="ipStatus">-</span></span>
+        <button onclick="testPanel()" style="padding:5px 15px;">📡 Test Panel</button>
+    </div>
+    
+    <!-- Search Clan -->
+    <div class="card">
+        <div class="search-box">
+            <input type="text" id="clanTag" placeholder="Tag Klan (contoh: #2RGPJ8ROV)" value="#2RGPJ8ROV">
+            <button onclick="loadClan()">🔍 Cari Klan</button>
+        </div>
+    </div>
+    
+    <!-- Tabs (muncul setelah klan di-load) -->
+    <div id="tabsContainer" style="display:none;">
+        <div class="tabs">
+            <div class="tab active" data-tab="info">📋 Info</div>
+            <div class="tab" data-tab="members">👥 Anggota</div>
+            <div class="tab" data-tab="war">⚔️ War</div>
+            <div class="tab" data-tab="warlog">📜 War Log</div>
+        </div>
+        
+        <div id="info" class="tab-content active"><div class="card" id="infoContent"></div></div>
+        <div id="members" class="tab-content"><div class="card" id="membersContent"></div></div>
+        <div id="war" class="tab-content"><div class="card" id="warContent"></div></div>
+        <div id="warlog" class="tab-content"><div class="card" id="warlogContent"></div></div>
+    </div>
+    
+    <!-- Search Player -->
+    <div class="card">
+        <div class="search-box">
+            <input type="text" id="playerTag" placeholder="Tag Pemain (contoh: #8GU9R0V)">
+            <button onclick="loadPlayer()">🔍 Cari Pemain</button>
+        </div>
+        <div id="playerContent"></div>
+    </div>
+</div>
+
+<script>
+let API_URL = localStorage.getItem('api_url');
+let currentClanTag = '';
+
+// ==================== SETUP URL PANEL ====================
+function setupPanelUrl() {
+    let url = prompt("Masukkan URL Panel Pterodactyl (contoh: http://123.45.67.89:2868):", API_URL || '');
+    if (url) {
+        API_URL = url;
+        localStorage.setItem('api_url', API_URL);
+        loadStatus();
+        return true;
+    }
+    return false;
+}
+
+// ==================== TEST PANEL ====================
+async function testPanel() {
+    if (!API_URL && !setupPanelUrl()) return;
+    const btn = event.target;
+    btn.textContent = '⏳...';
+    try {
+        const res = await fetch(`${API_URL}/api/status`);
+        const data = await res.json();
+        alert(`✅ Panel Online!\nIP: ${data.public_ip || data.local_ip}\nToken: ${data.token ? 'ADA' : 'BELUM'}`);
+        loadStatus();
+    } catch {
+        alert('❌ Panel Offline! Cek URL lagi.');
+        setupPanelUrl();
+    }
+    btn.textContent = '📡 Test Panel';
+}
+
+// ==================== LOAD STATUS ====================
+async function loadStatus() {
+    if (!API_URL) return;
+    try {
+        const res = await fetch(`${API_URL}/api/status`);
+        const data = await res.json();
+        document.getElementById('panelStatus').innerHTML = '<span class="online">● Online</span>';
+        document.getElementById('tokenStatus').innerHTML = data.token ? '✅ Ada' : '❌ Tidak ada';
+        document.getElementById('ipStatus').innerHTML = data.public_ip || data.local_ip;
+    } catch {
+        document.getElementById('panelStatus').innerHTML = '<span class="offline">● Offline</span>';
+    }
+}
+
+// ==================== LOAD CLAN ====================
+async function loadClan() {
+    let tag = document.getElementById('clanTag').value.trim();
+    if (!tag) return;
+    if (!tag.startsWith('#')) tag = '#' + tag;
+    currentClanTag = tag;
+    
+    // Tampilkan loading
+    document.getElementById('tabsContainer').style.display = 'block';
+    document.getElementById('infoContent').innerHTML = '<div class="loading">⏳ Loading clan info...</div>';
+    document.getElementById('membersContent').innerHTML = '<div class="loading">⏳ Loading members...</div>';
+    document.getElementById('warContent').innerHTML = '<div class="loading">⏳ Loading war...</div>';
+    document.getElementById('warlogContent').innerHTML = '<div class="loading">⏳ Loading war log...</div>';
+    
+    // Load semua data
+    await Promise.all([
+        loadClanInfo(),
+        loadMembers(),
+        loadWar(),
+        loadWarLog()
+    ]);
+}
+
+async function loadClanInfo() {
+    try {
+        const res = await fetch(`${API_URL}/api/clan?tag=${encodeURIComponent(currentClanTag)}`);
+        const data = await res.json();
+        if (data.error) throw new Error(data.reason);
+        document.getElementById('infoContent').innerHTML = `
+            <div class="info-box">
+                <strong>📛 ${data.name}</strong> (${data.tag})<br>
+                🏆 Level ${data.clanLevel} | 👥 ${data.members}/50<br>
+                🏅 Trofi ${data.clanPoints?.toLocaleString()} | 🔥 Win Streak ${data.warWinStreak}<br>
+                📍 ${data.location?.name || '-'} | 🔒 ${data.type}<br>
+                📝 ${data.description?.substring(0, 100) || '-'}
+            </div>
+        `;
+    } catch (err) {
+        document.getElementById('infoContent').innerHTML = `<div class="error">❌ ${err.message}</div>`;
+    }
+}
+
+async function loadMembers() {
+    try {
+        const res = await fetch(`${API_URL}/api/members?tag=${encodeURIComponent(currentClanTag)}`);
+        const data = await res.json();
+        if (data.error) throw new Error(data.reason);
+        if (!data.items?.length) throw new Error('Tidak ada anggota');
+        
+        let html = '<tr><th>No</th><th>Nama</th><th>Role</th><th>TH</th><th>🏆</th><th>Donasi</th></tr>';
+        data.items.forEach((m, i) => {
+            const icon = { leader:'👑', coLeader:'⭐', admin:'🔹', member:'🟢' }[m.role] || '•';
+            html += `<tr>
+                <td>${i+1}</td>
+                <td>${icon} ${m.name}</td>
+                <td>${m.role}</td>
+                <td>${m.townHallLevel}</td>
+                <td>${m.trophies}</td>
+                <td>${m.donations}</td>
+            </tr>`;
+        });
+        html += '</table>';
+        document.getElementById('membersContent').innerHTML = html;
+    } catch (err) {
+        document.getElementById('membersContent').innerHTML = `<div class="error">❌ ${err.message}</div>`;
+    }
+}
+
+async function loadWar() {
+    try {
+        const res = await fetch(`${API_URL}/api/war?tag=${encodeURIComponent(currentClanTag)}`);
+        const data = await res.json();
+        if (data.error) throw new Error(data.reason);
+        if (data.state !== 'inWar') {
+            document.getElementById('warContent').innerHTML = '<div class="info-box">⚔️ Tidak ada war aktif</div>';
+            return;
+        }
+        document.getElementById('warContent').innerHTML = `
+            <div class="war-score">
+                <div><div class="team-score">${data.clan.stars}⭐</div><div>${data.clan.destructionPercentage}%</div></div>
+                <div>VS</div>
+                <div><div class="team-score">${data.opponent.stars}⭐</div><div>${data.opponent.destructionPercentage}%</div></div>
+            </div>
+            <div class="info-box">⚔️ Berakhir: ${data.endTime?.slice(0,16) || '-'}</div>
+        `;
+    } catch (err) {
+        document.getElementById('warContent').innerHTML = `<div class="error">❌ ${err.message}</div>`;
+    }
+}
+
+async function loadWarLog() {
+    try {
+        const res = await fetch(`${API_URL}/api/warlog?tag=${encodeURIComponent(currentClanTag)}`);
+        const data = await res.json();
+        if (data.error) throw new Error(data.reason);
+        if (!data.items?.length) throw new Error('Belum ada riwayat war');
+        
+        let html = '<table><th>Tanggal</th><th>Lawan</th><th>Skor</th><th>Hasil</th></tr>';
+        data.items.slice(0, 10).forEach(w => {
+            const result = w.result === 'win' ? '✅ Menang' : w.result === 'lose' ? '❌ Kalah' : '🤝 Seri';
+            html += `<tr>
+                <td>${w.endTime?.slice(0,10)}</td>
+                <td>${w.opponent?.name}</td>
+                <td>${w.clan?.stars}⭐ vs ${w.opponent?.stars}⭐</td>
+                <td>${result}</td>
+            </tr>`;
+        });
+        html += '</table>';
+        document.getElementById('warlogContent').innerHTML = html;
+    } catch (err) {
+        document.getElementById('warlogContent').innerHTML = `<div class="error">❌ ${err.message}</div>`;
+    }
+}
+
+// ==================== LOAD PLAYER ====================
+async function loadPlayer() {
+    let tag = document.getElementById('playerTag').value.trim();
+    if (!tag) return;
+    if (!tag.startsWith('#')) tag = '#' + tag;
+    
+    document.getElementById('playerContent').innerHTML = '<div class="loading">⏳ Loading...</div>';
+    try {
+        const res = await fetch(`${API_URL}/api/player?tag=${encodeURIComponent(tag)}`);
+        const data = await res.json();
+        if (data.error) throw new Error(data.reason);
+        document.getElementById('playerContent').innerHTML = `
+            <div class="info-box">
+                🎮 <strong>${data.name}</strong> (${data.tag})<br>
+                🏠 TH${data.townHallLevel} | XP Level ${data.expLevel}<br>
+                🏆 Trofi ${data.trophies} | ⭐ Bintang War ${data.warStars}<br>
+                🤝 Donasi ${data.donations} | Terima ${data.donationsReceived}
+            </div>
+        `;
+    } catch (err) {
+        document.getElementById('playerContent').innerHTML = `<div class="error">❌ ${err.message}</div>`;
+    }
+}
+
+// ==================== TAB NAVIGATION ====================
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('tab')) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        e.target.classList.add('active');
+        document.getElementById(e.target.dataset.tab).classList.add('active');
+    }
+});
+
+// ==================== INIT ====================
+if (!localStorage.getItem('api_url')) {
+    setupPanelUrl();
+} else {
+    API_URL = localStorage.getItem('api_url');
+    loadStatus();
+}
+</script>
+</body>
+</html>
