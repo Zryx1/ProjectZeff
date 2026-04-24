@@ -1,40 +1,147 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>CoC Tracker - Fix</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoC Tracker - Direct API</title>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: #0a0f1a;
-            color: white;
             font-family: system-ui;
+            background: linear-gradient(135deg, #0a0f1a, #0f172a);
+            color: white;
             padding: 20px;
         }
-        button {
-            background: #f59e0b;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: bold;
-            margin-right: 10px;
-            margin-bottom: 10px;
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; margin-bottom: 5px; }
+        .sub { text-align: center; color: #94a3b8; margin-bottom: 20px; }
+        .card {
+            background: rgba(30,41,59,0.5);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
-        pre {
-            background: #1e293b;
-            padding: 15px;
-            border-radius: 12px;
-            overflow-x: auto;
-            font-size: 12px;
-            margin-top: 20px;
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
         }
         input {
-            background: #1e293b;
+            flex: 1;
+            padding: 12px;
+            border-radius: 40px;
             border: none;
-            padding: 10px;
-            border-radius: 30px;
+            background: #1e293b;
             color: white;
-            width: 200px;
+        }
+        button {
+            padding: 12px 24px;
+            background: #f59e0b;
+            border: none;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .info-box {
+            background: #0f172a;
+            padding: 16px;
+            border-radius: 16px;
+            margin-top: 10px;
+        }
+        .error { color: #f87171; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { color: #fbbf24; }
+        .loading { text-align: center; padding: 40px; color: #94a3b8; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🏰 CoC Tracker</h1>
+    <div class="sub">Direct API via Vercel Proxy | Token di JS</div>
+    
+    <div class="card">
+        <div class="search-box">
+            <input type="text" id="clanTag" placeholder="#2PPUJ9C88" value="#2PPUJ9C88">
+            <button onclick="loadClan()">Cari Klan</button>
+        </div>
+        <div id="clanResult"></div>
+    </div>
+    
+    <div class="card">
+        <div class="search-box">
+            <input type="text" id="playerTag" placeholder="#8GU9R0V">
+            <button onclick="loadPlayer()">Cari Pemain</button>
+        </div>
+        <div id="playerResult"></div>
+    </div>
+</div>
+
+<script>
+// ============ TOKEN SUPERCELL (GANTI DENGAN TOKEN KAMU) ============
+const TOKEN = "PASTE_TOKEN_PANJANG_KAMU_DISINI";
+// ====================================================================
+
+async function callAPI(endpoint) {
+    const url = `/api/coc/${endpoint}`;
+    const res = await fetch(url, {
+        headers: { "Authorization": `Bearer ${TOKEN}` }
+    });
+    return res.json();
+}
+
+async function loadClan() {
+    let tag = document.getElementById('clanTag').value.trim();
+    if (!tag) return;
+    if (!tag.startsWith('#')) tag = '#' + tag;
+    
+    const div = document.getElementById('clanResult');
+    div.innerHTML = '<div class="loading">Loading...</div>';
+    
+    try {
+        const data = await callAPI(`clans/${encodeURIComponent(tag)}`);
+        if (data.reason === 'accessDenied') throw new Error('Token tidak valid atau IP tidak diizinkan');
+        if (data.error || data.reason) throw new Error(data.reason || data.message);
+        
+        div.innerHTML = `
+            <div class="info-box">
+                📛 <strong>${data.name}</strong> (${data.tag})<br>
+                🏆 Level ${data.clanLevel} | 👥 ${data.members}/50<br>
+                🏅 Trofi ${data.clanPoints?.toLocaleString()} | 🔥 Win Streak ${data.warWinStreak}
+            </div>
+        `;
+    } catch (err) {
+        div.innerHTML = `<div class="info-box error">❌ ${err.message}</div>`;
+    }
+}
+
+async function loadPlayer() {
+    let tag = document.getElementById('playerTag').value.trim();
+    if (!tag) return;
+    if (!tag.startsWith('#')) tag = '#' + tag;
+    
+    const div = document.getElementById('playerResult');
+    div.innerHTML = '<div class="loading">Loading...</div>';
+    
+    try {
+        const data = await callAPI(`players/${encodeURIComponent(tag)}`);
+        if (data.reason === 'accessDenied') throw new Error('Token tidak valid');
+        if (data.error || data.reason) throw new Error(data.reason || data.message);
+        
+        div.innerHTML = `
+            <div class="info-box">
+                🎮 <strong>${data.name}</strong> (${data.tag})<br>
+                🏠 TH${data.townHallLevel} | XP ${data.expLevel}<br>
+                🏆 Trofi ${data.trophies} | ⭐ War ${data.warStars}
+            </div>
+        `;
+    } catch (err) {
+        div.innerHTML = `<div class="info-box error">❌ ${err.message}</div>`;
+    }
+}
+</script>
+</body>
+</html>            width: 200px;
             margin-right: 10px;
         }
         .status {
