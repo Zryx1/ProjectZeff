@@ -2,232 +2,417 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoC Tracker - Central Command</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>CoC Tracker - Panel Connected</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: system-ui;
-            background: linear-gradient(135deg, #0a0f1a, #0f172a);
-            color: white;
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a0f1a 0%, #0f172a 100%);
+            color: #f1f5f9;
+            min-height: 100vh;
             padding: 20px;
         }
-        .container { max-width: 1400px; margin: 0 auto; }
-        h1 { text-align: center; margin-bottom: 5px; }
-        .sub { text-align: center; color: #94a3b8; margin-bottom: 20px; }
-        
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .sub {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 24px;
+            font-size: 0.85rem;
+        }
         .status-bar {
-            background: rgba(30,41,59,0.8);
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
             border-radius: 16px;
-            padding: 15px;
+            padding: 12px 20px;
             margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             flex-wrap: wrap;
             gap: 10px;
+            border: 1px solid rgba(251, 191, 36, 0.3);
         }
-        .online { color: #4ade80; }
-        .offline { color: #f87171; }
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        .online { color: #4ade80; font-weight: bold; }
+        .offline { color: #f87171; font-weight: bold; }
         
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 8px;
+            border-radius: 60px;
+        }
+        .tab {
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #cbd5e1;
+            transition: 0.2s;
+        }
+        .tab.active {
+            background: #f59e0b;
+            color: #0f172a;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Cards */
         .card {
-            background: rgba(30,41,59,0.5);
-            border-radius: 20px;
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
             padding: 20px;
             margin-bottom: 20px;
+            border: 1px solid rgba(251, 191, 36, 0.3);
         }
-        
-        .panel-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .panel-card {
-            background: #0f172a;
-            border-radius: 16px;
-            padding: 15px;
-            border-left: 4px solid #f59e0b;
-        }
-        .panel-card h3 { color: #fbbf24; margin-bottom: 10px; }
-        .panel-card p { font-size: 12px; margin: 5px 0; }
-        
         .search-box {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
         }
         input {
             flex: 1;
-            padding: 10px 16px;
+            padding: 12px 18px;
             border-radius: 40px;
             border: none;
             background: #1e293b;
             color: white;
+            font-size: 14px;
         }
         button {
-            padding: 10px 20px;
-            background: #f59e0b;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
             border: none;
             border-radius: 40px;
             font-weight: bold;
             cursor: pointer;
+            transition: 0.1s;
         }
+        button:active { transform: scale(0.97); }
         .info-box {
             background: #0f172a;
             padding: 16px;
             border-radius: 16px;
             line-height: 1.6;
+            font-family: monospace;
+            margin-top: 10px;
         }
-        .error { color: #f87171; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow-x: auto;
+            display: block;
+        }
+        th, td {
+            padding: 10px 8px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
         th { color: #fbbf24; }
+        .war-score {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+        .team-score { font-size: 28px; font-weight: bold; color: #fbbf24; }
+        .error { background: rgba(220,38,38,0.2); padding: 12px; border-radius: 12px; color: #f87171; }
         .loading { text-align: center; padding: 40px; color: #94a3b8; }
+        .ip-highlight {
+            background: #f59e0b;
+            color: #0f172a;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .war-score { flex-direction: column; gap: 10px; }
+            th, td { font-size: 11px; padding: 6px 4px; }
+            .tab { padding: 6px 14px; font-size: 12px; }
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>🏰 CoC Tracker - Central Command</h1>
-    <div class="sub">Botnet Style | Panel Auto Register | Real-time Data</div>
+    <h1>🏰 CoC Tracker</h1>
+    <div class="sub">Panel Connected | Real-time Data | Auto Proxy</div>
     
+    <!-- Status Panel -->
     <div class="status-bar">
-        <span>📡 Panels: <span id="panelCount">0</span></span>
-        <span>🔄 Auto Sync: <span id="syncStatus">-</span></span>
-        <button onclick="refreshPanels()">🔄 Refresh Panels</button>
+        <div class="status-badge">📡 Panel: <span id="panelStatus" class="offline">● Checking...</span></div>
+        <div class="status-badge">🔑 Token: <span id="tokenStatus">-</span></div>
+        <div class="status-badge">🌐 IP: <span id="ipStatus">-</span></div>
+        <button onclick="testConnection()" style="padding:6px 16px; background:#3b82f6;">📡 Test Panel</button>
     </div>
     
-    <div class="card">
-        <h3>📋 Registered Panels</h3>
-        <div id="panelsList" class="panel-grid">Loading...</div>
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active" data-tab="clan">🏠 Clan</div>
+        <div class="tab" data-tab="members">👥 Members</div>
+        <div class="tab" data-tab="war">⚔️ War</div>
+        <div class="tab" data-tab="warlog">📜 War Log</div>
+        <div class="tab" data-tab="player">🎮 Player</div>
     </div>
     
-    <div class="card">
-        <h3>🏠 Cari Klan</h3>
-        <div class="search-box">
-            <input type="text" id="clanTag" placeholder="#2RGPJ8ROV">
-            <button onclick="searchClan()">🔍 Search</button>
+    <!-- Tab Clan -->
+    <div id="tab-clan" class="tab-content active">
+        <div class="card">
+            <div class="search-box">
+                <input type="text" id="clanTag" placeholder="Tag Klan (contoh: #2RGPJ8ROV)" value="#2RGPJ8ROV">
+                <button onclick="loadClan()">🔍 Cari Klan</button>
+            </div>
+            <div id="clanInfo"></div>
         </div>
-        <div id="clanResult"></div>
     </div>
     
-    <div class="card">
-        <h3>🎮 Cari Pemain</h3>
-        <div class="search-box">
-            <input type="text" id="playerTag" placeholder="#8GU9R0V">
-            <button onclick="searchPlayer()">🔍 Search</button>
+    <!-- Tab Members -->
+    <div id="tab-members" class="tab-content">
+        <div class="card">
+            <div class="search-box">
+                <input type="text" id="membersTag" placeholder="Tag Klan" value="#2RGPJ8ROV">
+                <button onclick="loadMembers()">🔍 Load Members</button>
+            </div>
+            <div id="membersInfo"></div>
         </div>
-        <div id="playerResult"></div>
     </div>
     
-    <div class="card">
-        <h3>📊 Clan Data dari Panel (Auto Sync)</h3>
-        <div id="panelData"></div>
+    <!-- Tab War -->
+    <div id="tab-war" class="tab-content">
+        <div class="card">
+            <div class="search-box">
+                <input type="text" id="warTag" placeholder="Tag Klan" value="#2RGPJ8ROV">
+                <button onclick="loadWar()">🔍 Load War</button>
+            </div>
+            <div id="warInfo"></div>
+        </div>
+    </div>
+    
+    <!-- Tab War Log -->
+    <div id="tab-warlog" class="tab-content">
+        <div class="card">
+            <div class="search-box">
+                <input type="text" id="warlogTag" placeholder="Tag Klan" value="#2RGPJ8ROV">
+                <button onclick="loadWarLog()">🔍 Load War Log</button>
+            </div>
+            <div id="warlogInfo"></div>
+        </div>
+    </div>
+    
+    <!-- Tab Player -->
+    <div id="tab-player" class="tab-content">
+        <div class="card">
+            <div class="search-box">
+                <input type="text" id="playerTag" placeholder="Tag Pemain (contoh: #8GU9R0V)">
+                <button onclick="loadPlayer()">🔍 Cari Pemain</button>
+            </div>
+            <div id="playerInfo"></div>
+        </div>
     </div>
 </div>
 
 <script>
-let panels = {};
-let selectedPanel = null;
-
-async function refreshPanels() {
-    const res = await fetch('/api/register');
-    const data = await res.json();
-    panels = data.panels || {};
-    
-    document.getElementById('panelCount').innerHTML = Object.keys(panels).length;
-    
-    let html = '';
-    for (const [id, panel] of Object.entries(panels)) {
-        const lastSeen = new Date(panel.last_seen);
-        const isOnline = (Date.now() - lastSeen) < 120000; // 2 menit
-        html += `
-            <div class="panel-card" onclick="selectPanel('${id}')" style="cursor:pointer;">
-                <h3>🖥️ Panel ${id.substring(0,10)}... ${isOnline ? '<span class="online">● Online</span>' : '<span class="offline">● Offline</span>'}</h3>
-                <p>🌐 IP: ${panel.public_ip || panel.local_ip}</p>
-                <p>🔑 Token: ${panel.token_status ? '✅ Ada' : '❌ Tidak'}</p>
-                <p>🕐 Last seen: ${panel.last_seen?.slice(0,19)}</p>
-            </div>
-        `;
-    }
-    document.getElementById('panelsList').innerHTML = html || '<p>Tidak ada panel terdaftar</p>';
-    
-    // Load data dari panel pertama
-    const firstId = Object.keys(panels)[0];
-    if (firstId) selectPanel(firstId);
-}
-
-async function selectPanel(panelId) {
-    selectedPanel = panelId;
-    document.getElementById('panelData').innerHTML = '<div class="loading">Loading panel data...</div>';
-    
+// ==================== PANEL STATUS ====================
+async function checkPanelStatus() {
     try {
-        const res = await fetch(`/api/submit?panel_id=${panelId}`);
+        const res = await fetch('/api/coc/status');
         const data = await res.json();
-        
-        if (data.clan_data && data.clan_data.clan) {
-            const clan = data.clan_data.clan;
-            document.getElementById('panelData').innerHTML = `
-                <div class="info-box">
-                    <strong>📛 ${clan.name}</strong> (${clan.tag})<br>
-                    🏆 Level ${clan.clanLevel} | 👥 ${clan.members}/50<br>
-                    🏅 Trofi ${clan.clanPoints?.toLocaleString()} | 🔥 Win Streak ${clan.warWinStreak}<br>
-                    📍 ${clan.location?.name || '-'}<br>
-                    🕐 Last sync: ${data.last_update?.slice(0,19) || '-'}
-                </div>
-            `;
-        } else {
-            document.getElementById('panelData').innerHTML = '<div class="info-box">Belum ada data dari panel</div>';
-        }
-    } catch {
-        document.getElementById('panelData').innerHTML = '<div class="error">Gagal load data panel</div>';
+        document.getElementById('panelStatus').innerHTML = '<span class="online">● Online</span>';
+        document.getElementById('tokenStatus').innerHTML = data.token ? '✅ Ada' : '❌ Tidak ada';
+        document.getElementById('ipStatus').innerHTML = data.public_ip || data.local_ip;
+        return true;
+    } catch (err) {
+        document.getElementById('panelStatus').innerHTML = '<span class="offline">● Offline</span>';
+        document.getElementById('tokenStatus').innerHTML = '❌ Gagal konek';
+        return false;
     }
 }
 
-async function searchClan() {
-    const tag = document.getElementById('clanTag').value;
+async function testConnection() {
+    const btn = event.target;
+    btn.textContent = '⏳...';
+    const status = await checkPanelStatus();
+    if (status) {
+        alert('✅ Panel Online!\nToken: ' + (document.getElementById('tokenStatus').innerHTML.includes('Ada') ? 'Ada' : 'Tidak ada'));
+    } else {
+        alert('❌ Panel Offline!\nCek apakah panel berjalan di port 2868');
+    }
+    btn.textContent = '📡 Test Panel';
+}
+
+// ==================== TAB NAVIGATION ====================
+document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
+    });
+});
+
+// ==================== CLAN ====================
+async function loadClan() {
+    let tag = document.getElementById('clanTag').value.trim();
     if (!tag) return;
-    if (!selectedPanel) { alert('Pilih panel dulu'); return; }
+    if (!tag.startsWith('#')) tag = '#' + tag;
     
-    const panel = panels[selectedPanel];
-    if (!panel) { alert('Panel tidak ditemukan'); return; }
-    
-    const panelUrl = `http://${panel.public_ip || panel.local_ip}:${panel.port || 2868}`;
-    
-    document.getElementById('clanResult').innerHTML = '<div class="loading">Loading...</div>';
+    const div = document.getElementById('clanInfo');
+    div.innerHTML = '<div class="loading">⏳ Loading...</div>';
     
     try {
-        const res = await fetch(`${panelUrl}/api/clan?tag=${encodeURIComponent(tag)}`);
+        const res = await fetch(`/api/coc/clan?tag=${encodeURIComponent(tag)}`);
         const data = await res.json();
         if (data.error) throw new Error(data.reason);
-        document.getElementById('clanResult').innerHTML = `
+        
+        div.innerHTML = `
             <div class="info-box">
-                📛 <strong>${data.name}</strong> (${data.tag})<br>
+                <strong>📛 ${data.name}</strong> (${data.tag})<br>
                 🏆 Level ${data.clanLevel} | 👥 ${data.members}/50<br>
-                🏅 Trofi ${data.clanPoints} | 🔥 Win Streak ${data.warWinStreak}
+                🏅 Trofi ${data.clanPoints?.toLocaleString()} | 🔥 Win Streak ${data.warWinStreak}<br>
+                📍 ${data.location?.name || '-'} | 🔒 ${data.type}
             </div>
         `;
     } catch (err) {
-        document.getElementById('clanResult').innerHTML = `<div class="error">❌ ${err.message}</div>`;
+        div.innerHTML = `<div class="error">❌ ${err.message}</div>`;
     }
 }
 
-async function searchPlayer() {
-    const tag = document.getElementById('playerTag').value;
+// ==================== MEMBERS ====================
+async function loadMembers() {
+    let tag = document.getElementById('membersTag').value.trim();
     if (!tag) return;
-    if (!selectedPanel) { alert('Pilih panel dulu'); return; }
+    if (!tag.startsWith('#')) tag = '#' + tag;
     
-    const panel = panels[selectedPanel];
-    if (!panel) { alert('Panel tidak ditemukan'); return; }
-    
-    const panelUrl = `http://${panel.public_ip || panel.local_ip}:${panel.port || 2868}`;
-    
-    document.getElementById('playerResult').innerHTML = '<div class="loading">Loading...</div>';
+    const div = document.getElementById('membersInfo');
+    div.innerHTML = '<div class="loading">⏳ Loading...</div>';
     
     try {
-        const res = await fetch(`${panelUrl}/api/player?tag=${encodeURIComponent(tag)}`);
+        const res = await fetch(`/api/coc/members?tag=${encodeURIComponent(tag)}`);
         const data = await res.json();
         if (data.error) throw new Error(data.reason);
-        document.getElementById('playerResult').innerHTML = `
+        if (!data.items?.length) throw new Error('Tidak ada anggota');
+        
+        let html = '<table><thead><tr><th>No</th><th>Nama</th><th>Role</th><th>TH</th><th>🏆</th><th>Donasi</th></tr></thead><tbody>';
+        data.items.forEach((m, i) => {
+            const icon = { leader:'👑', coLeader:'⭐', admin:'🔹', member:'🟢' }[m.role] || '•';
+            html += `<tr>
+                <td>${i+1}</td>
+                <td>${icon} ${m.name}</td>
+                <td>${m.role}</td>
+                <td>${m.townHallLevel}</td>
+                <td>${m.trophies}</td>
+                <td>${m.donations}</td>
+            </tr>`;
+        });
+        html += '</tbody></table>';
+        div.innerHTML = html;
+    } catch (err) {
+        div.innerHTML = `<div class="error">❌ ${err.message}</div>`;
+    }
+}
+
+// ==================== WAR ====================
+async function loadWar() {
+    let tag = document.getElementById('warTag').value.trim();
+    if (!tag) return;
+    if (!tag.startsWith('#')) tag = '#' + tag;
+    
+    const div = document.getElementById('warInfo');
+    div.innerHTML = '<div class="loading">⏳ Loading...</div>';
+    
+    try {
+        const res = await fetch(`/api/coc/war?tag=${encodeURIComponent(tag)}`);
+        const data = await res.json();
+        if (data.error) throw new Error(data.reason);
+        
+        if (data.state !== 'inWar') {
+            div.innerHTML = '<div class="info-box">⚔️ Tidak ada war aktif</div>';
+            return;
+        }
+        
+        div.innerHTML = `
+            <div class="war-score">
+                <div><div class="team-score">${data.clan.stars}⭐</div><div>${data.clan.destructionPercentage}%</div></div>
+                <div>VS</div>
+                <div><div class="team-score">${data.opponent.stars}⭐</div><div>${data.opponent.destructionPercentage}%</div></div>
+            </div>
+            <div class="info-box">⏰ Berakhir: ${data.endTime?.slice(0,16) || '-'}</div>
+        `;
+    } catch (err) {
+        div.innerHTML = `<div class="error">❌ ${err.message}</div>`;
+    }
+}
+
+// ==================== WAR LOG ====================
+async function loadWarLog() {
+    let tag = document.getElementById('warlogTag').value.trim();
+    if (!tag) return;
+    if (!tag.startsWith('#')) tag = '#' + tag;
+    
+    const div = document.getElementById('warlogInfo');
+    div.innerHTML = '<div class="loading">⏳ Loading...</div>';
+    
+    try {
+        const res = await fetch(`/api/coc/warlog?tag=${encodeURIComponent(tag)}`);
+        const data = await res.json();
+        if (data.error) throw new Error(data.reason);
+        if (!data.items?.length) throw new Error('Belum ada riwayat war');
+        
+        let html = '<tr><thead><tr><th>Tanggal</th><th>Lawan</th><th>Skor</th><th>Hasil</th></tr></thead><tbody>';
+        data.items.slice(0, 10).forEach(w => {
+            const result = w.result === 'win' ? '✅ Menang' : w.result === 'lose' ? '❌ Kalah' : '🤝 Seri';
+            html += `<tr>
+                <td>${w.endTime?.slice(0,10)}</td>
+                <td>${w.opponent?.name}</td>
+                <td>${w.clan?.stars}⭐ vs ${w.opponent?.stars}⭐</td>
+                <td>${result}</td>
+            </tr>`;
+        });
+        html += '</tbody></table>';
+        div.innerHTML = html;
+    } catch (err) {
+        div.innerHTML = `<div class="error">❌ ${err.message}</div>`;
+    }
+}
+
+// ==================== PLAYER ====================
+async function loadPlayer() {
+    let tag = document.getElementById('playerTag').value.trim();
+    if (!tag) return;
+    if (!tag.startsWith('#')) tag = '#' + tag;
+    
+    const div = document.getElementById('playerInfo');
+    div.innerHTML = '<div class="loading">⏳ Loading...</div>';
+    
+    try {
+        const res = await fetch(`/api/coc/player?tag=${encodeURIComponent(tag)}`);
+        const data = await res.json();
+        if (data.error) throw new Error(data.reason);
+        
+        div.innerHTML = `
             <div class="info-box">
                 🎮 <strong>${data.name}</strong> (${data.tag})<br>
                 🏠 TH${data.townHallLevel} | XP ${data.expLevel}<br>
@@ -236,12 +421,13 @@ async function searchPlayer() {
             </div>
         `;
     } catch (err) {
-        document.getElementById('playerResult').innerHTML = `<div class="error">❌ ${err.message}</div>`;
+        div.innerHTML = `<div class="error">❌ ${err.message}</div>`;
     }
 }
 
-refreshPanels();
-setInterval(refreshPanels, 30000);
+// ==================== INIT ====================
+checkPanelStatus();
+setInterval(checkPanelStatus, 30000);
 </script>
 </body>
 </html>
