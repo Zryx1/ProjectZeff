@@ -2,142 +2,66 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoC Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>CoC Tracker - Final Edition</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #0a0f1a 0%, #0f172a 100%);
             color: #f1f5f9;
             min-height: 100vh;
             padding: 16px;
         }
-        .container { max-width: 1200px; margin: 0 auto; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
         
         /* Header */
         .header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
         .header h1 {
             font-size: 1.8rem;
             background: linear-gradient(135deg, #fbbf24, #f59e0b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
         }
-        .header p { color: #94a3b8; font-size: 0.8rem; margin-top: 4px; }
+        .header p {
+            color: #64748b;
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
         
         /* Status Bar */
         .status-bar {
             background: rgba(30, 41, 59, 0.6);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 12px 20px;
+            padding: 10px 16px;
             margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 12px;
-            border: 1px solid rgba(251,191,36,0.2);
+            gap: 8px;
+            border: 1px solid rgba(251,191,36,0.15);
         }
         .status-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 13px;
+            gap: 6px;
+            font-size: 12px;
         }
-        .online { color: #4ade80; font-weight: bold; }
-        .offline { color: #f87171; font-weight: bold; }
-        
-        /* Card */
-        .card {
-            background: rgba(30, 41, 59, 0.5);
-            backdrop-filter: blur(12px);
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(251,191,36,0.15);
-        }
-        .card h3 {
-            margin-bottom: 16px;
-            color: #fbbf24;
-            font-size: 1.2rem;
-        }
-        
-        /* Search Box */
-        .search-box {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .search-box input {
-            flex: 1;
-            padding: 12px 18px;
-            border-radius: 40px;
-            border: none;
-            background: #1e293b;
-            color: white;
-            font-size: 14px;
-        }
-        .search-box button {
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            border: none;
-            border-radius: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.1s;
-        }
-        .search-box button:active { transform: scale(0.97); }
-        
-        /* Result Box */
-        .result-box {
-            background: #0f172a;
-            border-radius: 16px;
-            padding: 16px;
-            margin-top: 16px;
-            font-size: 14px;
-            line-height: 1.6;
-            overflow-x: auto;
-        }
-        .error {
-            background: rgba(220,38,38,0.2);
-            color: #f87171;
-        }
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #94a3b8;
-        }
-        
-        /* Table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px 8px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        th { color: #fbbf24; }
-        
-        /* War Score */
-        .war-score {
-            display: flex;
-            justify-content: space-between;
-            text-align: center;
-            background: #0f172a;
-            padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 16px;
-        }
-        .team-score {
-            font-size: 28px;
-            font-weight: bold;
-            color: #fbbf24;
-        }
+        .online { color: #4ade80; font-weight: 600; }
+        .offline { color: #f87171; font-weight: 600; }
         
         /* Tabs */
         .tabs {
@@ -147,48 +71,222 @@
             margin-bottom: 20px;
         }
         .tab {
-            padding: 10px 20px;
-            background: rgba(30,41,59,0.6);
+            padding: 8px 18px;
+            background: rgba(30, 41, 59, 0.5);
             border-radius: 40px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 500;
             font-size: 14px;
+            transition: all 0.2s;
+            border: 1px solid transparent;
         }
         .tab.active {
             background: #f59e0b;
             color: #0f172a;
+            border-color: #f59e0b;
         }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Card */
+        .card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid rgba(251,191,36,0.1);
+        }
+        .card-header {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .card-header h3 {
+            color: #fbbf24;
+            font-size: 1.1rem;
+        }
+        
+        /* Search Box */
+        .search-box {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .search-box input {
+            flex: 1;
+            padding: 12px 18px;
+            border-radius: 40px;
+            border: none;
+            background: #1e293b;
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
+        .search-box input:focus {
+            outline: 2px solid #f59e0b;
+        }
+        .search-box button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #0f172a;
+            transition: 0.1s;
+        }
+        .search-box button:active {
+            transform: scale(0.97);
+        }
+        
+        /* Result */
+        .result-box {
+            background: #0f172a;
+            border-radius: 20px;
+            padding: 16px;
+            margin-top: 16px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748b;
+        }
+        .error {
+            background: rgba(220,38,38,0.15);
+            color: #f87171;
+        }
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #94a3b8;
+        }
+        
+        /* Table */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        th {
+            color: #fbbf24;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        td {
+            font-size: 13px;
+        }
+        
+        /* Member row clickable */
+        .member-row {
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+        .member-row:hover {
+            background: rgba(251,191,36,0.1);
+        }
+        
+        /* Tag copy */
+        .tag-copy {
+            background: #1e293b;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-family: monospace;
+            font-size: 11px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .tag-copy:hover {
+            background: #f59e0b;
+            color: #0f172a;
+        }
+        
+        /* War Score */
+        .war-score {
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+        }
+        .team-score {
+            font-size: 28px;
+            font-weight: bold;
+            color: #fbbf24;
+        }
+        
+        /* Badge */
+        .badge {
+            background: rgba(251,191,36,0.2);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #fbbf24;
+        }
+        
+        /* Progress */
+        .progress-bar {
+            background: #1e293b;
+            border-radius: 10px;
+            height: 6px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+            height: 100%;
+            border-radius: 10px;
+        }
         
         @media (max-width: 640px) {
-            .status-bar { flex-direction: column; }
+            body { padding: 12px; }
+            .tab { padding: 6px 14px; font-size: 12px; }
+            th, td { font-size: 11px; padding: 8px 4px; }
             .war-score { flex-direction: column; gap: 10px; }
-            th, td { font-size: 11px; padding: 6px; }
         }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <h1>🏰 CoC Tracker</h1>
-        <p>Clash of Clans Web Tracker | Panel Connected</p>
+        <h1>🏰 Clash of Clans Tracker</h1>
+        <p>Real-time data dari Supercell API</p>
     </div>
     
     <!-- Status Bar -->
     <div class="status-bar">
-        <div class="status-item">📡 Panel: <span id="panelStatus" class="offline">● Checking...</span></div>
+        <div class="status-item">📡 Panel: <span id="panelStatus" class="offline">● Offline</span></div>
         <div class="status-item">🔑 Token: <span id="tokenStatus">-</span></div>
         <div class="status-item">🌐 IP: <span id="ipStatus">-</span></div>
-        <div class="status-item">
-            <button onclick="checkPanel()" style="background:#3b82f6; border:none; padding:4px 12px; border-radius:20px; cursor:pointer;">Test Panel</button>
-        </div>
+        <div class="status-item"><button onclick="checkPanel()" style="background:#3b82f6; border:none; padding:4px 12px; border-radius:16px; font-size:11px; cursor:pointer;">Test Panel</button></div>
     </div>
     
     <!-- Tabs -->
     <div class="tabs">
         <div class="tab active" data-tab="clan">🏠 Clan</div>
-        <div class="tab" data-tab="members">👥 Members</div>
+        <div class="tab" data-tab="members">👥 Anggota</div>
         <div class="tab" data-tab="war">⚔️ War</div>
         <div class="tab" data-tab="player">🎮 Player</div>
     </div>
@@ -196,76 +294,73 @@
     <!-- Tab Clan -->
     <div id="tab-clan" class="tab-content active">
         <div class="card">
-            <h3>🏠 Cari Klan</h3>
+            <div class="card-header"><h3>🏠 Cari Klan</h3></div>
             <div class="search-box">
-                <input type="text" id="clanTag" placeholder="Contoh: #2PPUJ9C88" value="#2PPUJ9C88">
-                <button onclick="loadClan()">🔍 Cari</button>
+                <input type="text" id="clanTag" placeholder="Masukkan tag klan...">
+                <button onclick="loadClan()">Cari</button>
             </div>
-            <div id="clanResult" class="result-box">Masukkan tag klan</div>
+            <div id="clanResult" class="result-box empty-state">Masukkan tag klan untuk memulai</div>
         </div>
     </div>
     
     <!-- Tab Members -->
     <div id="tab-members" class="tab-content">
         <div class="card">
-            <h3>👥 Daftar Anggota</h3>
+            <div class="card-header"><h3>👥 Daftar Anggota</h3></div>
             <div class="search-box">
-                <input type="text" id="membersTag" placeholder="Tag Klan" value="#2PPUJ9C88">
-                <button onclick="loadMembers()">🔍 Load</button>
+                <input type="text" id="membersTag" placeholder="Masukkan tag klan...">
+                <button onclick="loadMembers()">Tampilkan</button>
             </div>
-            <div id="membersResult" class="result-box">Masukkan tag klan</div>
+            <div id="membersResult" class="result-box empty-state">Masukkan tag klan untuk melihat anggota</div>
         </div>
     </div>
     
     <!-- Tab War -->
     <div id="tab-war" class="tab-content">
         <div class="card">
-            <h3>⚔️ War Aktif</h3>
+            <div class="card-header"><h3>⚔️ War Aktif</h3></div>
             <div class="search-box">
-                <input type="text" id="warTag" placeholder="Tag Klan" value="#2PPUJ9C88">
-                <button onclick="loadWar()">🔍 Load</button>
+                <input type="text" id="warTag" placeholder="Masukkan tag klan...">
+                <button onclick="loadWar()">Cek War</button>
             </div>
-            <div id="warResult" class="result-box">Masukkan tag klan</div>
+            <div id="warResult" class="result-box empty-state">Masukkan tag klan untuk melihat war</div>
         </div>
     </div>
     
     <!-- Tab Player -->
     <div id="tab-player" class="tab-content">
         <div class="card">
-            <h3>🎮 Cari Pemain</h3>
+            <div class="card-header"><h3>🎮 Cari Pemain</h3></div>
             <div class="search-box">
-                <input type="text" id="playerTag" placeholder="Contoh: #8GU9R0V">
-                <button onclick="loadPlayer()">🔍 Cari</button>
+                <input type="text" id="playerTag" placeholder="Masukkan tag pemain...">
+                <button onclick="loadPlayer()">Cari</button>
             </div>
-            <div id="playerResult" class="result-box">Masukkan tag pemain</div>
+            <div id="playerResult" class="result-box empty-state">Masukkan tag pemain untuk melihat detail</div>
         </div>
     </div>
 </div>
 
 <script>
-// Panel URL (sudah diatur di vercel.json proxy)
 const API_BASE = '/api/coc';
 
-// ==================== CEK PANEL ====================
+// ==================== PANEL STATUS ====================
 async function checkPanel() {
-    const panelStatus = document.getElementById('panelStatus');
+    const panelSpan = document.getElementById('panelStatus');
     const tokenSpan = document.getElementById('tokenStatus');
     const ipSpan = document.getElementById('ipStatus');
     
-    panelStatus.innerHTML = '● Checking...';
+    panelSpan.innerHTML = '● Checking...';
     
     try {
         const res = await fetch(`${API_BASE}/status`);
         const data = await res.json();
-        panelStatus.innerHTML = '<span class="online">● Online</span>';
+        panelSpan.innerHTML = '<span class="online">● Online</span>';
         tokenSpan.innerHTML = data.token ? '✅ Ada' : '❌ Tidak ada';
         ipSpan.innerHTML = data.public_ip || '-';
-        return true;
     } catch (err) {
-        panelStatus.innerHTML = '<span class="offline">● Offline</span>';
-        tokenSpan.innerHTML = '❌ Gagal konek';
+        panelSpan.innerHTML = '<span class="offline">● Offline</span>';
+        tokenSpan.innerHTML = '❌ Gagal';
         ipSpan.innerHTML = '-';
-        return false;
     }
 }
 
@@ -281,23 +376,35 @@ async function loadClan() {
     try {
         const res = await fetch(`${API_BASE}/clan?tag=${encodeURIComponent(tag)}`);
         const data = await res.json();
-        
-        if (data.error || data.reason) {
-            throw new Error(data.reason || data.message || 'Gagal ambil data');
-        }
+        if (data.error || data.reason) throw new Error(data.reason || 'Gagal');
         
         div.innerHTML = `
-            <strong>📛 ${data.name}</strong> (${data.tag})<br>
-            🏆 Level ${data.clanLevel} | 👥 ${data.members}/50<br>
-            🏅 Trofi ${data.clanPoints?.toLocaleString()} | 🔥 Win Streak ${data.warWinStreak}<br>
-            📍 ${data.location?.name || '-'} | 🔒 ${data.type}
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+                <div>
+                    <strong style="font-size:18px;">${data.name}</strong>
+                    <span class="badge" style="margin-left:8px;">${data.tag}</span>
+                </div>
+                <div style="margin-left:auto;">
+                    <span class="tag-copy" onclick="copyToClipboard('${data.tag}')">📋 Copy Tag</span>
+                </div>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:12px; margin-bottom:16px;">
+                <div><span style="color:#94a3b8;">Level</span><br><strong>${data.clanLevel}</strong></div>
+                <div><span style="color:#94a3b8;">Anggota</span><br><strong>${data.members}/50</strong></div>
+                <div><span style="color:#94a3b8;">Trofi</span><br><strong>${data.clanPoints?.toLocaleString()}</strong></div>
+                <div><span style="color:#94a3b8;">Win Streak</span><br><strong>${data.warWinStreak}</strong></div>
+            </div>
+            <div><span style="color:#94a3b8;">📍 Lokasi:</span> ${data.location?.name || '-'} | <span style="color:#94a3b8;">🔒 Tipe:</span> ${data.type}</div>
+            ${data.description ? `<div style="margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.1);"><span style="color:#94a3b8;">📝 Deskripsi:</span><br>${data.description.substring(0, 150)}${data.description.length > 150 ? '...' : ''}</div>` : ''}
         `;
     } catch (err) {
-        div.innerHTML = `<span class="error">❌ ${err.message}</span>`;
+        div.innerHTML = `<div class="error">❌ ${err.message}</div>`;
     }
 }
 
 // ==================== MEMBERS ====================
+let currentMembers = [];
+
 async function loadMembers() {
     let tag = document.getElementById('membersTag').value.trim();
     if (!tag) return;
@@ -309,26 +416,98 @@ async function loadMembers() {
     try {
         const res = await fetch(`${API_BASE}/members?tag=${encodeURIComponent(tag)}`);
         const data = await res.json();
-        
         if (data.error || data.reason) throw new Error(data.reason || 'Gagal');
         if (!data.items || data.items.length === 0) throw new Error('Tidak ada anggota');
         
-        let html = '<table><th>No</th><th>Nama</th><th>Role</th><th>TH</th><th>🏆</th><th>Donasi</th></tr>';
+        currentMembers = data.items;
+        
+        let html = '<div class="table-wrapper"><table><thead><tr>';
+        html += '<th>No</th><th>Nama</th><th>Role</th><th>TH</th><th>🏆</th><th>Donasi</th>';
+        html += '</tr></thead><tbody>';
+        
         data.items.forEach((m, i) => {
             let icon = { leader:'👑', coLeader:'⭐', admin:'🔹', member:'🟢' }[m.role] || '•';
-            html += `<tr>
+            html += `<tr class="member-row" onclick="showMemberDetail('${m.tag.replace(/'/g, "\\'")}', '${m.name.replace(/'/g, "\\'")}')">
                 <td>${i+1}</td>
                 <td>${icon} ${m.name}</td>
                 <td>${m.role}</td>
                 <td>${m.townHallLevel}</td>
                 <td>${m.trophies}</td>
-                <td>${m.donations}</td>
+                <td>${m.donations.toLocaleString()}</td>
             </tr>`;
         });
-        html += '</table>';
+        html += '</tbody></table></div>';
+        html += `<div style="margin-top:12px; text-align:center; font-size:11px; color:#64748b;">✨ Klik anggota untuk lihat detail lengkap + achievement ✨</div>`;
         div.innerHTML = html;
     } catch (err) {
-        div.innerHTML = `<span class="error">❌ ${err.message}</span>`;
+        div.innerHTML = `<div class="error">❌ ${err.message}</div>`;
+    }
+}
+
+// ==================== MEMBER DETAIL + ACHIEVEMENT ====================
+async function showMemberDetail(tag, name) {
+    const div = document.getElementById('membersResult');
+    div.innerHTML = '<div class="loading">⏳ Loading detail...</div>';
+    
+    try {
+        const res = await fetch(`${API_BASE}/player?tag=${encodeURIComponent(tag)}`);
+        const data = await res.json();
+        if (data.error || data.reason) throw new Error(data.reason || 'Gagal');
+        
+        let achievementsHtml = '';
+        if (data.achievements && data.achievements.length > 0) {
+            achievementsHtml = '<div style="margin-top:16px;"><strong>🏆 Pencapaian (Achievements)</strong><div style="margin-top:8px;">';
+            data.achievements.slice(0, 10).forEach(ach => {
+                let percent = (ach.value / ach.target) * 100;
+                achievementsHtml += `
+                    <div style="margin-bottom:12px;">
+                        <div style="display:flex; justify-content:space-between; font-size:12px;">
+                            <span>${ach.name}</span>
+                            <span>${ach.value}/${ach.target}</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width:${percent}%;"></div></div>
+                    </div>
+                `;
+            });
+            achievementsHtml += '</div></div>';
+        } else {
+            achievementsHtml = '<div style="margin-top:16px;"><strong>🏆 Pencapaian</strong><div style="margin-top:8px; color:#64748b;">Belum ada achievement</div></div>';
+        }
+        
+        let heroesHtml = '';
+        if (data.heroes && data.heroes.length > 0) {
+            heroesHtml = '<div style="margin-top:16px;"><strong>🦸 Heroes</strong><div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:8px;">';
+            data.heroes.forEach(h => {
+                if (h.village === 'home') {
+                    heroesHtml += `<div style="background:#1e293b; padding:8px 12px; border-radius:12px;"><strong>${h.name}</strong><br>Lv ${h.level}/${h.maxLevel}</div>`;
+                }
+            });
+            heroesHtml += '</div></div>';
+        }
+        
+        div.innerHTML = `
+            <div>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:16px;">
+                    <strong style="font-size:18px;">🎮 ${data.name}</strong>
+                    <span class="tag-copy" onclick="copyToClipboard('${data.tag}')">📋 Copy Tag</span>
+                </div>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px;">
+                    <div><span style="color:#94a3b8;">Town Hall</span><br><strong>${data.townHallLevel}</strong></div>
+                    <div><span style="color:#94a3b8;">XP Level</span><br><strong>${data.expLevel}</strong></div>
+                    <div><span style="color:#94a3b8;">Trofi</span><br><strong>${data.trophies.toLocaleString()}</strong></div>
+                    <div><span style="color:#94a3b8;">Bintang War</span><br><strong>${data.warStars}</strong></div>
+                    <div><span style="color:#94a3b8;">Donasi</span><br><strong>${data.donations.toLocaleString()}</strong></div>
+                    <div><span style="color:#94a3b8;">Terima</span><br><strong>${data.donationsReceived.toLocaleString()}</strong></div>
+                </div>
+                ${heroesHtml}
+                ${achievementsHtml}
+                <div style="margin-top:16px;">
+                    <button onclick="loadMembers()" style="background:#3b82f6; border:none; padding:8px 16px; border-radius:20px; cursor:pointer;">← Kembali ke daftar anggota</button>
+                </div>
+            </div>
+        `;
+    } catch (err) {
+        div.innerHTML = `<div class="error">❌ ${err.message}</div>`;
     }
 }
 
@@ -344,23 +523,23 @@ async function loadWar() {
     try {
         const res = await fetch(`${API_BASE}/war?tag=${encodeURIComponent(tag)}`);
         const data = await res.json();
-        
         if (data.error || data.reason) throw new Error(data.reason || 'Gagal');
+        
         if (data.state !== 'inWar') {
-            div.innerHTML = '<span>⚔️ Tidak ada war aktif</span>';
+            div.innerHTML = '<div class="empty-state">⚔️ Tidak ada war aktif saat ini</div>';
             return;
         }
         
         div.innerHTML = `
             <div class="war-score">
-                <div><div class="team-score">${data.clan.stars}⭐</div><div>${data.clan.destructionPercentage}%</div></div>
-                <div>VS</div>
-                <div><div class="team-score">${data.opponent.stars}⭐</div><div>${data.opponent.destructionPercentage}%</div></div>
+                <div><div class="team-score">${data.clan.stars}⭐</div><div>${data.clan.destructionPercentage}%</div><div>${data.clan.attacks} serangan</div></div>
+                <div style="font-size:20px; font-weight:bold;">VS</div>
+                <div><div class="team-score">${data.opponent.stars}⭐</div><div>${data.opponent.destructionPercentage}%</div><div>${data.opponent.attacks} serangan</div></div>
             </div>
-            <div>⏰ Berakhir: ${data.endTime?.slice(0,16) || '-'}</div>
+            <div style="text-align:center; font-size:12px; color:#64748b;">⏰ Berakhir: ${data.endTime?.slice(0,16) || '-'}</div>
         `;
     } catch (err) {
-        div.innerHTML = `<span class="error">❌ ${err.message}</span>`;
+        div.innerHTML = `<div class="error">❌ ${err.message}</div>`;
     }
 }
 
@@ -376,21 +555,85 @@ async function loadPlayer() {
     try {
         const res = await fetch(`${API_BASE}/player?tag=${encodeURIComponent(tag)}`);
         const data = await res.json();
-        
         if (data.error || data.reason) throw new Error(data.reason || 'Gagal');
         
+        let achievementsHtml = '';
+        if (data.achievements && data.achievements.length > 0) {
+            achievementsHtml = '<div style="margin-top:20px;"><strong>🏆 Pencapaian (Achievements)</strong><div style="margin-top:10px;">';
+            data.achievements.forEach(ach => {
+                let percent = (ach.value / ach.target) * 100;
+                achievementsHtml += `
+                    <div style="margin-bottom:14px;">
+                        <div style="display:flex; justify-content:space-between; font-size:12px;">
+                            <span>${ach.name}</span>
+                            <span>${ach.value}/${ach.target}</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width:${percent}%;"></div></div>
+                    </div>
+                `;
+            });
+            achievementsHtml += '</div></div>';
+        } else {
+            achievementsHtml = '<div class="empty-state" style="margin-top:16px;">🏆 Belum ada achievement</div>';
+        }
+        
+        let heroesHtml = '';
+        if (data.heroes && data.heroes.length > 0) {
+            heroesHtml = '<div style="margin-top:20px;"><strong>🦸 Heroes</strong><div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:10px;">';
+            data.heroes.forEach(h => {
+                if (h.village === 'home') {
+                    heroesHtml += `<div style="background:#1e293b; padding:10px 14px; border-radius:16px;"><strong>${h.name}</strong><br>Level ${h.level}/${h.maxLevel}</div>`;
+                }
+            });
+            heroesHtml += '</div></div>';
+        }
+        
         div.innerHTML = `
-            🎮 <strong>${data.name}</strong> (${data.tag})<br>
-            🏠 TH${data.townHallLevel} | XP ${data.expLevel}<br>
-            🏆 Trofi ${data.trophies} | ⭐ War ${data.warStars}<br>
-            🤝 Donasi ${data.donations} | Terima ${data.donationsReceived}
+            <div>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:20px;">
+                    <strong style="font-size:20px;">🎮 ${data.name}</strong>
+                    <span class="tag-copy" onclick="copyToClipboard('${data.tag}')">📋 Copy Tag</span>
+                </div>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:16px;">
+                    <div><span style="color:#94a3b8;">Town Hall</span><br><strong>${data.townHallLevel}</strong></div>
+                    <div><span style="color:#94a3b8;">XP Level</span><br><strong>${data.expLevel}</strong></div>
+                    <div><span style="color:#94a3b8;">Trofi</span><br><strong>${data.trophies.toLocaleString()}</strong></div>
+                    <div><span style="color:#94a3b8;">Best Trofi</span><br><strong>${data.bestTrophies.toLocaleString()}</strong></div>
+                    <div><span style="color:#94a3b8;">Bintang War</span><br><strong>${data.warStars}</strong></div>
+                    <div><span style="color:#94a3b8;">Donasi</span><br><strong>${data.donations.toLocaleString()}</strong></div>
+                    <div><span style="color:#94a3b8;">Donasi Diterima</span><br><strong>${data.donationsReceived.toLocaleString()}</strong></div>
+                    ${data.builderHallLevel ? `<div><span style="color:#94a3b8;">Builder Hall</span><br><strong>${data.builderHallLevel}</strong></div>` : ''}
+                    ${data.clanCapitalContributions ? `<div><span style="color:#94a3b8;">Kontribusi Ibu Kota</span><br><strong>${data.clanCapitalContributions.toLocaleString()} gold</strong></div>` : ''}
+                </div>
+                ${heroesHtml}
+                ${achievementsHtml}
+            </div>
         `;
     } catch (err) {
-        div.innerHTML = `<span class="error">❌ ${err.message}</span>`;
+        div.innerHTML = `<div class="error">❌ ${err.message}</div>`;
     }
 }
 
-// ==================== TAB NAVIGATION ====================
+// ==================== COPY ====================
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text);
+    const notification = document.createElement('div');
+    notification.textContent = '✅ Tag disalin!';
+    notification.style.position = 'fixed';
+    notification.style.bottom = '20px';
+    notification.style.left = '50%';
+    notification.style.transform = 'translateX(-50%)';
+    notification.style.background = '#f59e0b';
+    notification.style.color = '#0f172a';
+    notification.style.padding = '8px 20px';
+    notification.style.borderRadius = '40px';
+    notification.style.fontWeight = 'bold';
+    notification.style.zIndex = '9999';
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 1500);
+}
+
+// ==================== TAB ====================
 document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -402,6 +645,7 @@ document.querySelectorAll('.tab').forEach(tab => {
 
 // ==================== INIT ====================
 checkPanel();
+setInterval(checkPanel, 30000);
 </script>
 </body>
 </html>
