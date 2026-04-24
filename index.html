@@ -1,164 +1,151 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
+    <title>CoC Tracker - Fix</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoC Tracker - Proxy OK</title>
     <style>
-        body { font-family: system-ui; background: #0a0f1a; color: white; padding: 20px; background: linear-gradient(135deg, #0a0f1a, #0f172a); }
-        .container { max-width: 1200px; margin: 0 auto; }
-        h1 { text-align: center; background: linear-gradient(135deg, #fbbf24, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .card { background: rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; margin-bottom: 20px; }
-        .status-bar { background: rgba(30,41,59,0.8); border-radius: 16px; padding: 12px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; }
+        body {
+            background: #0a0f1a;
+            color: white;
+            font-family: system-ui;
+            padding: 20px;
+        }
+        button {
+            background: #f59e0b;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        pre {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 12px;
+            overflow-x: auto;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+        input {
+            background: #1e293b;
+            border: none;
+            padding: 10px;
+            border-radius: 30px;
+            color: white;
+            width: 200px;
+            margin-right: 10px;
+        }
+        .status {
+            background: #0f172a;
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
         .online { color: #4ade80; }
-        .offline { color: #f87171; }
-        .search-box { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        input { flex: 1; padding: 12px 16px; border-radius: 40px; border: none; background: #1e293b; color: white; }
-        button { padding: 12px 24px; background: #f59e0b; border: none; border-radius: 40px; font-weight: bold; cursor: pointer; }
-        .info-box { background: #0f172a; padding: 16px; border-radius: 16px; margin-top: 10px; line-height: 1.6; }
-        .error { color: #f87171; background: rgba(220,38,38,0.2); padding: 12px; border-radius: 12px; }
-        .loading { text-align: center; padding: 40px; color: #94a3b8; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 10px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        th { color: #fbbf24; }
-        .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-        .tab { padding: 8px 16px; background: rgba(255,255,255,0.1); border-radius: 40px; cursor: pointer; }
-        .tab.active { background: #f59e0b; color: black; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
     </style>
 </head>
 <body>
-<div class="container">
+
     <h1>🏰 CoC Tracker</h1>
-    <div class="status-bar">
-        <span>📡 Panel: <span id="panelStatus" class="offline">● Checking...</span></span>
-        <span>🔑 Token: <span id="tokenStatus">-</span></span>
-        <span>🌐 IP: <span id="ipStatus">-</span></span>
+    
+    <div class="status" id="statusPanel">📡 Panel: <span class="online">Checking...</span></div>
+
+    <div>
         <button onclick="testPanel()">📡 Test Panel</button>
+        <button onclick="loadStatus()">🔄 Load Status</button>
     </div>
 
-    <div class="tabs">
-        <div class="tab active" data-tab="clan">🏠 Clan</div>
-        <div class="tab" data-tab="members">👥 Members</div>
-        <div class="tab" data-tab="player">🎮 Player</div>
+    <div style="margin-top: 20px;">
+        <input type="text" id="clanTag" placeholder="#2RGPJ8ROV" value="#2RGPJ8ROV">
+        <button onclick="loadClan()">🏠 Cari Clan</button>
     </div>
 
-    <div id="tab-clan" class="tab-content active">
-        <div class="card">
-            <div class="search-box">
-                <input type="text" id="clanTag" placeholder="#2RGPJ8ROV" value="#2RGPJ8ROV">
-                <button onclick="loadClan()">Cari Clan</button>
-            </div>
-            <div id="clanResult"></div>
-        </div>
+    <div style="margin-top: 10px;">
+        <input type="text" id="playerTag" placeholder="#8GU9R0V">
+        <button onclick="loadPlayer()">🎮 Cari Player</button>
     </div>
 
-    <div id="tab-members" class="tab-content">
-        <div class="card">
-            <div class="search-box">
-                <input type="text" id="membersTag" placeholder="#2RGPJ8ROV" value="#2RGPJ8ROV">
-                <button onclick="loadMembers()">Load Members</button>
-            </div>
-            <div id="membersResult"></div>
-        </div>
-    </div>
+    <pre id="result">Klik tombol di atas...</pre>
 
-    <div id="tab-player" class="tab-content">
-        <div class="card">
-            <div class="search-box">
-                <input type="text" id="playerTag" placeholder="#8GU9R0V">
-                <button onclick="loadPlayer()">Cari Player</button>
-            </div>
-            <div id="playerResult"></div>
-        </div>
-    </div>
-</div>
+    <script>
+        async function testPanel() {
+            const pre = document.getElementById('result');
+            pre.innerText = 'Loading...';
+            try {
+                const res = await fetch('/api/coc/status');
+                const data = await res.json();
+                pre.innerText = JSON.stringify(data, null, 2);
+                
+                // Update status panel
+                const statusDiv = document.getElementById('statusPanel');
+                if (data.token) {
+                    statusDiv.innerHTML = `📡 Panel: <span class="online">● Online</span> | 🔑 Token: Ada | 🌐 IP: ${data.public_ip || data.local_ip}`;
+                } else {
+                    statusDiv.innerHTML = `📡 Panel: <span class="online">● Online</span> | 🔑 Token: <span style="color:#f87171;">Tidak ada</span>`;
+                }
+            } catch (err) {
+                pre.innerText = 'Error: ' + err.message;
+                document.getElementById('statusPanel').innerHTML = '📡 Panel: <span style="color:#f87171;">● Offline</span>';
+            }
+        }
 
-<script>
-async function testPanel() {
-    try {
-        const res = await fetch('/api/coc/status');
-        const data = await res.json();
-        document.getElementById('panelStatus').innerHTML = '<span class="online">● Online</span>';
-        document.getElementById('tokenStatus').innerHTML = data.token ? '✅ Ada' : '❌ Tidak';
-        document.getElementById('ipStatus').innerHTML = data.public_ip || data.local_ip;
-        alert('✅ Panel Online!');
-    } catch (err) {
-        document.getElementById('panelStatus').innerHTML = '<span class="offline">● Offline</span>';
-        alert('❌ Panel Offline!');
-    }
-}
+        async function loadStatus() {
+            await testPanel();
+        }
 
-async function loadClan() {
-    let tag = document.getElementById('clanTag').value.trim();
-    if (!tag) return;
-    if (!tag.startsWith('#')) tag = '#' + tag;
-    const div = document.getElementById('clanResult');
-    div.innerHTML = '<div class="loading">Loading...</div>';
-    
-    try {
-        const res = await fetch(`/api/coc/clan?tag=${encodeURIComponent(tag)}`);
-        const data = await res.json();
-        if (data.error) throw new Error(data.reason);
-        div.innerHTML = `<div class="info-box">📛 <strong>${data.name}</strong> (${data.tag})<br>🏆 Level ${data.clanLevel} | 👥 ${data.members}/50<br>🏅 Trofi ${data.clanPoints} | 🔥 Win Streak ${data.warWinStreak}<br>📍 ${data.location?.name || '-'}</div>`;
-    } catch (err) {
-        div.innerHTML = `<div class="error">❌ ${err.message}</div>`;
-    }
-}
+        async function loadClan() {
+            let tag = document.getElementById('clanTag').value.trim();
+            if (!tag) return;
+            if (!tag.startsWith('#')) tag = '#' + tag;
+            
+            const pre = document.getElementById('result');
+            pre.innerText = 'Loading clan...';
+            
+            try {
+                // Encode tag dengan benar
+                const encodedTag = encodeURIComponent(tag);
+                const res = await fetch(`/api/coc/clan?tag=${encodedTag}`);
+                const data = await res.json();
+                
+                if (data.error) {
+                    pre.innerText = 'Error: ' + (data.reason || 'Clan tidak ditemukan');
+                    return;
+                }
+                
+                pre.innerText = JSON.stringify(data, null, 2);
+            } catch (err) {
+                pre.innerText = 'Error: ' + err.message;
+            }
+        }
 
-async function loadMembers() {
-    let tag = document.getElementById('membersTag').value.trim();
-    if (!tag) return;
-    if (!tag.startsWith('#')) tag = '#' + tag;
-    const div = document.getElementById('membersResult');
-    div.innerHTML = '<div class="loading">Loading...</div>';
-    
-    try {
-        const res = await fetch(`/api/coc/members?tag=${encodeURIComponent(tag)}`);
-        const data = await res.json();
-        if (data.error) throw new Error(data.reason);
-        if (!data.items?.length) throw new Error('Tidak ada anggota');
-        let html = '<tr><th>No</th><th>Nama</th><th>Role</th><th>TH</th><th>🏆</th><th>Donasi</th></tr>';
-        data.items.forEach((m, i) => {
-            const icon = { leader:'👑', coLeader:'⭐', admin:'🔹', member:'🟢' }[m.role] || '•';
-            html += `<tr><td>${i+1}</td><td>${icon} ${m.name}</td><td>${m.role}</td><td>${m.townHallLevel}</td><td>${m.trophies}</td><td>${m.donations}</td></tr>`;
-        });
-        html += '</table>';
-        div.innerHTML = html;
-    } catch (err) {
-        div.innerHTML = `<div class="error">❌ ${err.message}</div>`;
-    }
-}
+        async function loadPlayer() {
+            let tag = document.getElementById('playerTag').value.trim();
+            if (!tag) return;
+            if (!tag.startsWith('#')) tag = '#' + tag;
+            
+            const pre = document.getElementById('result');
+            pre.innerText = 'Loading player...';
+            
+            try {
+                const encodedTag = encodeURIComponent(tag);
+                const res = await fetch(`/api/coc/player?tag=${encodedTag}`);
+                const data = await res.json();
+                
+                if (data.error) {
+                    pre.innerText = 'Error: ' + (data.reason || 'Player tidak ditemukan');
+                    return;
+                }
+                
+                pre.innerText = JSON.stringify(data, null, 2);
+            } catch (err) {
+                pre.innerText = 'Error: ' + err.message;
+            }
+        }
 
-async function loadPlayer() {
-    let tag = document.getElementById('playerTag').value.trim();
-    if (!tag) return;
-    if (!tag.startsWith('#')) tag = '#' + tag;
-    const div = document.getElementById('playerResult');
-    div.innerHTML = '<div class="loading">Loading...</div>';
-    
-    try {
-        const res = await fetch(`/api/coc/player?tag=${encodeURIComponent(tag)}`);
-        const data = await res.json();
-        if (data.error) throw new Error(data.reason);
-        div.innerHTML = `<div class="info-box">🎮 <strong>${data.name}</strong> (${data.tag})<br>🏠 TH${data.townHallLevel} | XP ${data.expLevel}<br>🏆 Trofi ${data.trophies} | ⭐ War ${data.warStars}<br>🤝 Donasi ${data.donations} | Terima ${data.donationsReceived}</div>`;
-    } catch (err) {
-        div.innerHTML = `<div class="error">❌ ${err.message}</div>`;
-    }
-}
-
-// Tab navigation
-document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
-    });
-});
-
-testPanel();
-</script>
+        // Auto test panel saat halaman dibuka
+        testPanel();
+    </script>
 </body>
 </html>
