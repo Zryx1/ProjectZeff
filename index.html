@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>CoC Tracker - TH Icons (TH1 - TH18)</title>
+    <title>CoC Tracker - Town Hall Icons (Th1.png ... Th18.png)</title>
     <style>
         * {
             margin: 0;
@@ -46,7 +46,7 @@
             background: rgba(30,41,59,0.7);
             border-radius: 60px;
             padding: 6px 16px;
-            font-size: 12px;
+            font-size: 11px;
             border: 1px solid rgba(251,191,36,0.3);
         }
 
@@ -174,28 +174,29 @@
         }
 
         /* TH Icon */
-        .th-icon {
-            width: 34px;
-            height: 34px;
-            object-fit: contain;
-            vertical-align: middle;
-            margin-right: 8px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-        }
-        .th-icon-small {
+        .th-icon-micro {
             width: 26px;
             height: 26px;
-            margin-right: 5px;
+            object-fit: contain;
+            vertical-align: middle;
+            margin-left: 6px;
+        }
+        .th-icon-medium {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            vertical-align: middle;
+            margin-right: 10px;
         }
         .player-th {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(0,0,0,0.5);
-            padding: 6px 16px;
+            background: rgba(0,0,0,0.45);
+            padding: 6px 18px;
             border-radius: 60px;
             font-weight: bold;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
         /* Tag copy */
@@ -280,8 +281,8 @@
         }
 
         @media (max-width: 640px) {
-            .th-icon { width: 28px; height: 28px; }
-            .th-icon-small { width: 22px; height: 22px; }
+            .th-icon-micro { width: 22px; height: 22px; }
+            .th-icon-medium { width: 36px; height: 36px; }
             .search-box button { padding: 12px 20px; }
         }
     </style>
@@ -291,10 +292,10 @@
     <div class="header">
         <div class="header-left">
             <h1>🏰 Clash of Clans Tracker</h1>
-            <p>Ikon Town Hall dari folder /Th-Level/ (TH1.png - TH18.png) | T besar</p>
+            <p>Ikon Town Hall : Th1.png , Th2.png … Th18.png (T besar, h kecil)</p>
         </div>
         <div class="th-notice">
-            📁 /Th-Level/TH1.png ... Th1.png ... /Th-Level/TH18.png
+            📁 /Th-Level/Th1.png , Th2.png ... , Th18.png
         </div>
     </div>
 
@@ -311,7 +312,6 @@
         <div class="tab" data-tab="player">🎮 Cari Pemain</div>
     </div>
 
-    <!-- Clan tab -->
     <div id="tab-clan" class="tab-content active">
         <div class="card">
             <div class="card-header"><h3>🏠 Cari Klan</h3></div>
@@ -323,7 +323,6 @@
         </div>
     </div>
 
-    <!-- Player tab -->
     <div id="tab-player" class="tab-content">
         <div class="card">
             <div class="card-header"><h3>🎮 Cari Pemain</h3></div>
@@ -341,17 +340,21 @@ const API_BASE = '/api/coc';
 let currentClanData = null;
 let currentMembers = [];
 
-// ====================== TH ICON ======================
-// Folder: /Th-Level/ , nama file TH1.png , TH2.png ... TH18.png (T besar)
+// ========== TH ICON : Th1.png , Th2.png , ... Th18.png ==========
 function getThIconUrl(thLevel) {
-    if (!thLevel || thLevel < 1 || thLevel > 18) return '/Th-Level/TH1.png';
-    return `/Th-Level/TH${thLevel}.png`;
+    if (!thLevel || thLevel < 1) return '/Th-Level/Th1.png';
+    if (thLevel > 18) thLevel = 18;
+    return `/Th-Level/Th${thLevel}.png`;
 }
 
-function thImage(thLevel, sizeClass = 'th-icon') {
+function thIconSmall(thLevel) {
     if (!thLevel || thLevel < 1) return '';
-    const url = getThIconUrl(thLevel);
-    return `<img src="${url}" class="${sizeClass}" alt="TH${thLevel}" title="Town Hall ${thLevel}" onerror="this.onerror=null;this.style.opacity='0.7';">`;
+    return `<img src="${getThIconUrl(thLevel)}" class="th-icon-micro" alt="TH${thLevel}" title="Town Hall ${thLevel}" onerror="this.style.display='none';">`;
+}
+
+function thIconMedium(thLevel) {
+    if (!thLevel || thLevel < 1) return '';
+    return `<img src="${getThIconUrl(thLevel)}" class="th-icon-medium" alt="TH${thLevel}" title="Town Hall ${thLevel}" onerror="this.style.display='none';">`;
 }
 
 // Role mapping Indonesia
@@ -442,25 +445,25 @@ function displayClanAndMembers(clan, members) {
         </div>
         <div><strong>👥 Anggota (${members.length})</strong></div>
         <div class="table-wrapper">
-            <table><thead></table><th>No</th><th>Nama & TH</th><th>Peran</th><th>🏆</th><th>Donasi</th></tr></thead><tbody>
+            <table><thead><tr><th>No</th><th>Nama & TH</th><th>Peran</th><th>🏆</th><th>Donasi</th></tr></thead><tbody>
     `;
     members.forEach((m, i) => {
         const icon = { leader:'👑', coLeader:'⭐', admin:'🔹', member:'🟢' }[m.role] || '•';
         const roleId = mapRole(m.role);
-        const thImg = thImage(m.townHallLevel, 'th-icon-small');
+        const tinyIcon = thIconSmall(m.townHallLevel);
         clanHtml += `<tr class="member-row" onclick='showMemberDetail("${m.tag.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}", "${escapeHtml(m.name).replace(/'/g, "\\'")}")'>
             <td>${i+1}</td>
-            <td>${icon} ${escapeHtml(m.name)} ${thImg} (TH${m.townHallLevel})</td>
+            <td>${icon} ${escapeHtml(m.name)} ${tinyIcon} (TH${m.townHallLevel})</td>
             <td>${roleId}</td>
             <td>${m.trophies.toLocaleString()}</td>
             <td>${m.donations.toLocaleString()}</td>
         </tr>`;
     });
-    clanHtml += `</tbody></table></div><div style="margin-top:12px; text-align:center; font-size:11px;">✨ Klik anggota untuk detail + pencapaian ✨</div>`;
+    clanHtml += `</tbody></table></div><div style="margin-top:12px; text-align:center; font-size:11px;">✨ Klik anggota untuk lihat detail + pencapaian ✨</div>`;
     div.innerHTML = clanHtml;
 }
 
-// ========== DETAIL MEMBER (PROFIL) + TH ICON BESAR ==========
+// ========== DETAIL MEMBER (profil dengan TH medium di atas nama) ==========
 async function showMemberDetail(tag, name) {
     const div = document.getElementById('clanResult');
     div.innerHTML = '<div class="loading">⏳ Loading profil...</div>';
@@ -468,7 +471,8 @@ async function showMemberDetail(tag, name) {
         const res = await fetch(`${API_BASE}/player?tag=${encodeURIComponent(tag)}`);
         const data = await res.json();
         if (data.error) throw new Error(data.reason || 'Gagal');
-        const thImgBig = thImage(data.townHallLevel, 'th-icon');
+        
+        const mediumIcon = thIconMedium(data.townHallLevel);
         const builderHall = data.builderHallLevel || 'Tidak punya';
         const builderTrophies = data.builderBaseTrophies || 0;
         const builderBest = data.bestBuilderBaseTrophies || 0;
@@ -478,12 +482,11 @@ async function showMemberDetail(tag, name) {
         if (data.achievements && data.achievements.length) {
             achievementsHtml = '<div style="margin-top:20px;"><strong>🏆 Pencapaian</strong><div style="margin-top:12px;">';
             data.achievements.slice(0,15).forEach(ach => {
-                let percent = (ach.value / ach.target) * 100;
-                let indoName = translateAchievement(ach.name);
+                const percent = (ach.value / ach.target) * 100;
                 achievementsHtml += `
                     <div style="margin-bottom:14px;">
                         <div style="display:flex; justify-content:space-between; font-size:12px;">
-                            <span>${indoName}</span>
+                            <span>${translateAchievement(ach.name)}</span>
                             <span>${ach.value.toLocaleString()}/${ach.target.toLocaleString()}</span>
                         </div>
                         <div class="progress-bar"><div class="progress-fill" style="width:${percent}%;"></div></div>
@@ -508,12 +511,12 @@ async function showMemberDetail(tag, name) {
 
         div.innerHTML = `
             <div>
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
                     <strong style="font-size:20px;">🎮 ${escapeHtml(data.name)}</strong>
                     <span class="tag-copy" onclick="copyToClipboard('${data.tag}')">📋 Copy Tag</span>
                 </div>
                 <div class="player-th">
-                    ${thImgBig} Town Hall ${data.townHallLevel}
+                    ${mediumIcon} Town Hall ${data.townHallLevel}
                 </div>
                 <div class="flex-grid">
                     <div><span style="color:#94a3b8;">Level XP</span><br><strong>${data.expLevel}</strong></div>
@@ -555,7 +558,8 @@ async function searchPlayer() {
         const res = await fetch(`${API_BASE}/player?tag=${encodeURIComponent(tag)}`);
         const data = await res.json();
         if (data.error) throw new Error(data.reason || 'Gagal');
-        const thImgBig = thImage(data.townHallLevel, 'th-icon');
+        
+        const mediumIcon = thIconMedium(data.townHallLevel);
         const builderHall = data.builderHallLevel || 'Tidak punya';
         const builderTrophies = data.builderBaseTrophies || 0;
         const builderBest = data.bestBuilderBaseTrophies || 0;
@@ -565,7 +569,7 @@ async function searchPlayer() {
         if (data.achievements && data.achievements.length) {
             achievementsHtml = '<div style="margin-top:20px;"><strong>🏆 Pencapaian</strong><div style="margin-top:12px;">';
             data.achievements.slice(0,15).forEach(ach => {
-                let percent = (ach.value / ach.target) * 100;
+                const percent = (ach.value / ach.target) * 100;
                 achievementsHtml += `
                     <div style="margin-bottom:14px;">
                         <div style="display:flex; justify-content:space-between; font-size:12px;">
@@ -589,11 +593,11 @@ async function searchPlayer() {
         }
         div.innerHTML = `
             <div>
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
                     <strong style="font-size:20px;">🎮 ${escapeHtml(data.name)}</strong>
                     <span class="tag-copy" onclick="copyToClipboard('${data.tag}')">📋 Copy Tag</span>
                 </div>
-                <div class="player-th">${thImgBig} Town Hall ${data.townHallLevel}</div>
+                <div class="player-th">${mediumIcon} Town Hall ${data.townHallLevel}</div>
                 <div class="flex-grid">
                     <div><span style="color:#94a3b8;">Level XP</span><br><strong>${data.expLevel}</strong></div>
                     <div><span style="color:#94a3b8;">Trofi</span><br><strong>${data.trophies.toLocaleString()}</strong></div>
