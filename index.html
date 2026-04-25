@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>CoC Viewer Web - TH Icon</title>
+    <title>CoC Viewer - TH Icons Ready</title>
     <style>
         * {
             margin: 0;
@@ -42,7 +42,15 @@
             color: #64748b;
             font-size: 0.7rem;
         }
-               /* Status Bar */
+        .th-notice {
+            background: rgba(30,41,59,0.6);
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            color: #fbbf24;
+        }
+        
+        /* Status Bar */
         .status-bar {
             background: rgba(30, 41, 59, 0.6);
             backdrop-filter: blur(10px);
@@ -288,7 +296,10 @@
     <div class="header">
         <div class="header-left">
             <h1>🏰 Clash of Clans Tracker</h1>
-            <p>Dengan Ikon Town Hall & Basis Tukang</p>
+            <p>Dengan Ikon Town Hall (TH1..TH18) dari folder /Th-Level/</p>
+        </div>
+        <div class="th-notice">
+            📁 Letakkan th1.png - th18.png di folder <strong>/Th-Level/</strong>
         </div>
     </div>
     
@@ -335,23 +346,19 @@ const API_BASE = '/api/coc';
 let currentClanData = null;
 let currentMembers = [];
 
-// ====================== TH ICON BUILDER ======================
-// Fungsi untuk mendapatkan gambar Town Hall 1-18 plus level 15,16,17,18 modern
+// ====================== TH ICON - ADAPTABLE ======================
+// Fungsi untuk mendapatkan gambar Town Hall 1-18 dari folder /Th-Level/
+// Kamu cukup taruh file th1.png, th2.png, ..., th18.png ke folder /Th-Level/
 function getThIconUrl(thLevel) {
-    if (!thLevel || thLevel < 1) return 'https://raw.githubusercontent.com/clashking/coc-images/master/town-hall/1.png';
-    // Pastikan ada folder/URL yang valid. Kita gunakan CDN dari clashking atau direktori images.
-    // Sumber gambar asli dari repo clashking cukup stabil
-    if (thLevel >= 1 && thLevel <= 18) {
-        return `https://raw.githubusercontent.com/clashking/coc-images/master/town-hall/${thLevel}.png`;
-    }
-    return `https://raw.githubusercontent.com/clashking/coc-images/master/town-hall/1.png`;
+    if (!thLevel || thLevel < 1 || thLevel > 18) return '/Th-Level/th1.png';
+    return `/Th-Level/th${thLevel}.png`;
 }
 
-// Komponen gambar TH dalam baris (table, detail, dll)
+// Helper untuk menampilkan gambar TH dengan fallback opsional
 function thImage(thLevel, sizeClass = 'th-icon') {
     if (!thLevel || thLevel < 1) return '';
     const url = getThIconUrl(thLevel);
-    return `<img src="${url}" class="${sizeClass}" alt="TH${thLevel}" title="Town Hall ${thLevel}" onerror="this.src='https://raw.githubusercontent.com/clashking/coc-images/master/town-hall/14.png'">`;
+    return `<img src="${url}" class="${sizeClass}" alt="TH${thLevel}" title="Town Hall ${thLevel}" onerror="this.onerror=null;this.style.display='none';this.nextSibling?.style?.display?this.nextSibling.style.display='inline-block':null;">`;
 }
 
 // Role mapping Indonesia
@@ -464,12 +471,11 @@ function displayClanAndMembers(clan, members) {
     members.forEach((m, i) => {
         let icon = { leader:'👑', coLeader:'⭐', admin:'🔹', member:'🟢' }[m.role] || '•';
         let roleId = mapRole(m.role);
-        // Tampilkan gambar TH di samping nama
         const thImg = thImage(m.townHallLevel, 'th-icon-small');
         clanHtml += `<tr class="member-row" onclick='showMemberDetail("${m.tag.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}", "${escapeHtml(m.name).replace(/'/g, "\\'")}")'>
             <td>${i+1}</td>
             <td>${icon} ${escapeHtml(m.name)} ${thImg} (TH${m.townHallLevel})</td>
-            <td>${roleId}</td>
+            </table>${roleId}</td>
             <td>${m.trophies.toLocaleString()}</td>
             <td>${m.donations.toLocaleString()}</td>
         </tr>`;
