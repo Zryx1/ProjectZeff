@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>CoC Tracker</title>
+    <title>CoC Viewer Web</title>
     <style>
         * {
             margin: 0;
@@ -254,7 +254,7 @@
 <body>
 <div class="container">
     <div class="header">
-        <h1>🏰 Clash of Clans Tracker</h1>
+        <h1>Clash of Clans Tracker</h1>
         <p>Real-time data dari Supercell API</p>
     </div>
     
@@ -387,7 +387,7 @@ function displayClanAndMembers(clan, members) {
     `;
     
     members.forEach((m, i) => {
-        let icon = { leader:'👑', coLeader:'⭐', admin:'🔹', member:'🟢' }[m.role] || '•';
+        let icon = { Pemimpin:'👑', Wakil:'⭐', Senior:'🔘', Anggota:'🟢' }[m.role] || '•';
         clanHtml += `<tr class="member-row" onclick="showMemberDetail('${m.tag.replace(/'/g, "\\'")}', '${m.name.replace(/'/g, "\\'")}')">
             <td>${i+1}</td>
             <td>${icon} ${m.name}</td>
