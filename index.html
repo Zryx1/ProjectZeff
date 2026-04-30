@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>CoC Tracker - Town Hall & Builder Hall Icons</title>
+    <title>Clash Royale · Clan & Player Tracker</title>
     <style>
         * {
             margin: 0;
@@ -11,286 +11,272 @@
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
+
         body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #0a0f1a 0%, #0f172a 100%);
-            color: #f1f5f9;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: radial-gradient(circle at 20% 30%, #0b1120, #03060c);
+            color: #edf2ff;
+            padding: 24px 20px;
             min-height: 100vh;
-            padding: 16px;
         }
+
         .container {
-            max-width: 1200px;
+            max-width: 1350px;
             margin: 0 auto;
         }
 
-        /* Header */
+        /* header + animasi */
         .header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
+            align-items: flex-end;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 20px;
+            margin-bottom: 35px;
+            border-bottom: 1px solid rgba(255, 200, 100, 0.25);
+            padding-bottom: 16px;
+            animation: fadeSlide 0.6s ease-out;
+        }
+        @keyframes fadeSlide {
+            0% { opacity: 0; transform: translateY(-18px);}
+            100% { opacity: 1; transform: translateY(0);}
         }
         .header-left h1 {
-            font-size: 1.6rem;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            font-size: 2rem;
+            background: linear-gradient(130deg, #FFE6B0, #F5A623);
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
         }
-        .header-left p {
-            color: #64748b;
+        .badge-light {
+            background: rgba(245, 166, 35, 0.2);
+            padding: 4px 14px;
+            border-radius: 90px;
             font-size: 0.7rem;
-        }
-        .icon-notice {
-            background: rgba(30,41,59,0.7);
-            border-radius: 60px;
-            padding: 6px 16px;
-            font-size: 11px;
-            border: 1px solid rgba(251,191,36,0.3);
+            font-weight: 500;
+            backdrop-filter: blur(4px);
         }
 
-        /* Status Bar */
+        /* status bar */
         .status-bar {
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 8px 16px;
-            margin-bottom: 20px;
+            background: rgba(12, 20, 32, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 12px 24px;
+            margin-bottom: 30px;
             display: flex;
             justify-content: center;
-            gap: 20px;
-            border: 1px solid rgba(251,191,36,0.15);
+            gap: 32px;
+            flex-wrap: wrap;
+            border: 1px solid rgba(245, 166, 35, 0.4);
+            animation: fadeIn 0.5s ease;
         }
         .status-item {
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 12px;
+            gap: 10px;
+            font-weight: 500;
+            background: #00000035;
+            padding: 6px 20px;
+            border-radius: 60px;
         }
-        .online { color: #4ade80; font-weight: 600; }
-        .offline { color: #f87171; font-weight: 600; }
+        .online { color: #6fef8c; text-shadow: 0 0 4px #1e5a1e; }
+        .offline { color: #ffa59b; }
 
-        /* Card */
-        .card {
-            background: rgba(30, 41, 59, 0.5);
-            backdrop-filter: blur(12px);
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(251,191,36,0.15);
-            transition: border 0.2s;
+        /* card */
+        .glass-card {
+            background: rgba(8, 16, 28, 0.65);
+            backdrop-filter: blur(14px);
+            border-radius: 38px;
+            padding: 28px;
+            margin-bottom: 32px;
+            border: 1px solid rgba(245, 166, 35, 0.3);
+            transition: all 0.2s;
+            animation: cardGlow 0.55s ease-out;
         }
-        .card:hover {
-            border-color: rgba(251,191,36,0.5);
+        @keyframes cardGlow {
+            0% { opacity: 0; transform: scale(0.98);}
+            100% { opacity: 1; transform: scale(1);}
         }
         .card-header {
-            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 210, 100, 0.3);
             padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         .card-header h3 {
-            color: #fbbf24;
-            font-size: 1.1rem;
+            color: #FFDD99;
+            font-weight: 700;
+            letter-spacing: -0.3px;
         }
 
-        /* Search Box */
-        .search-box {
+        /* search row */
+        .search-row {
             display: flex;
-            gap: 10px;
+            gap: 14px;
             flex-wrap: wrap;
         }
-        .search-box input {
+        .search-row input {
             flex: 1;
-            padding: 14px 18px;
-            border-radius: 40px;
+            padding: 15px 22px;
+            border-radius: 60px;
             border: none;
-            background: #1e293b;
+            background: #101826;
             color: white;
-            font-size: 14px;
+            font-size: 1rem;
             outline: none;
+            box-shadow: inset 0 1px 3px #00000030, 0 0 0 1px rgba(245,166,35,0.35);
+            transition: 0.2s;
         }
-        .search-box input:focus {
-            outline: 2px solid #f59e0b;
+        .search-row input:focus {
+            background: #16202f;
+            box-shadow: 0 0 0 2px #F5A623, inset 0 1px 2px #000;
         }
-        .search-box button {
-            padding: 14px 28px;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        .search-row button {
+            padding: 12px 32px;
+            background: linear-gradient(105deg, #E5982A, #F5B042);
             border: none;
-            border-radius: 40px;
-            font-weight: 600;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: #0c0f1a;
             cursor: pointer;
-            color: #0f172a;
+            transition: 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
         }
+        .search-row button:active { transform: scale(0.96);}
+        .search-row button:hover { filter: brightness(1.05); background: linear-gradient(105deg, #F0AD40, #FFC25B);}
 
-        /* Result */
+        /* result containers */
         .result-box {
-            background: #0f172a;
-            border-radius: 20px;
-            padding: 20px;
-            margin-top: 20px;
-            font-size: 14px;
-            line-height: 1.6;
-            border: 1px solid rgba(251,191,36,0.2);
+            background: #07111ecc;
+            border-radius: 32px;
+            padding: 22px;
+            margin-top: 22px;
+            animation: fadeInUp 0.3s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px);}
+            to { opacity: 1; transform: translateY(0);}
         }
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
-            color: #64748b;
+            padding: 48px 20px;
+            color: #b4ceff;
         }
         .error {
-            background: rgba(220,38,38,0.15);
-            color: #f87171;
-        }
-        .loading {
-            text-align: center;
-            padding: 30px;
-            color: #94a3b8;
+            background: #361a1a;
+            color: #ffb7ae;
+            padding: 18px;
+            border-radius: 28px;
+            border-left: 5px solid #ff6a4b;
         }
 
-        /* Table */
+        /* table */
         .table-wrapper {
             overflow-x: auto;
+            border-radius: 28px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
         }
         th, td {
-            padding: 12px 8px;
+            padding: 14px 10px;
             text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 1px solid rgba(255,210,120,0.2);
             vertical-align: middle;
         }
-        th {
-            color: #fbbf24;
-            font-weight: 600;
-            font-size: 12px;
-        }
-        td {
-            font-size: 13px;
-        }
+        th { color: #FFD699; font-weight: 600; }
         .member-row {
             cursor: pointer;
-            transition: background 0.1s;
+            transition: all 0.1s;
         }
         .member-row:hover {
-            background: rgba(251,191,36,0.1);
+            background: rgba(245, 166, 35, 0.15);
+            transform: scale(1.002);
         }
-
-        /* TH & BH Icons */
-        .th-icon-micro, .bh-icon-micro {
-            width: 26px;
-            height: 26px;
-            object-fit: contain;
-            vertical-align: middle;
-            margin-left: 6px;
-        }
-        .th-icon-medium, .bh-icon-medium {
-            width: 42px;
-            height: 42px;
-            object-fit: contain;
-            vertical-align: middle;
-            margin-right: 10px;
-        }
-        .player-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(0,0,0,0.45);
-            padding: 6px 18px;
-            border-radius: 60px;
-            font-weight: bold;
-            margin-bottom: 18px;
-            margin-right: 12px;
-        }
-
-        /* Tag copy */
         .tag-copy {
-            background: #1e293b;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-family: monospace;
-            font-size: 11px;
+            background: #1f2a3e;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            cursor: pointer;
-        }
-        .tag-copy:hover {
-            background: #f59e0b;
-            color: #0f172a;
-        }
-
-        .badge {
-            background: rgba(251,191,36,0.2);
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            color: #fbbf24;
-        }
-
-        /* Progress bar */
-        .progress-bar {
-            background: #1e293b;
-            border-radius: 10px;
-            height: 4px;
-            overflow: hidden;
-            margin-top: 4px;
-        }
-        .progress-fill {
-            background: linear-gradient(90deg, #fbbf24, #f59e0b);
-            height: 100%;
-            border-radius: 10px;
-        }
-
-        .back-btn {
-            background: #3b82f6;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            cursor: pointer;
-            margin-top: 16px;
-        }
-
-        .tabs {
-            display: flex;
             gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-        .tab {
-            padding: 8px 18px;
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 40px;
             cursor: pointer;
-            font-weight: 500;
-            font-size: 14px;
+            transition: 0.1s;
         }
-        .tab.active {
-            background: #f59e0b;
-            color: #0f172a;
+        .tag-copy:hover { background: #F5A623; color: #0a0e1a; }
+        .badge-clan {
+            background: rgba(245, 166, 35, 0.25);
+            padding: 4px 15px;
+            border-radius: 80px;
+            font-size: 0.8rem;
         }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-
         .flex-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-            margin-bottom: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 18px;
+            margin: 20px 0;
         }
-
-        @media (max-width: 640px) {
-            .th-icon-micro, .bh-icon-micro { width: 22px; height: 22px; }
-            .th-icon-medium, .bh-icon-medium { width: 36px; height: 36px; }
-            .search-box button { padding: 12px 20px; }
-            .player-badge { padding: 4px 12px; }
+        .player-badge {
+            background: #0b1322cc;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 22px;
+            border-radius: 60px;
+            font-weight: 600;
+            margin-right: 14px;
+            margin-bottom: 12px;
+            backdrop-filter: blur(6px);
+        }
+        .th-icon-micro, .bh-icon-micro { width: 30px; height: 30px; object-fit: contain; margin-left: 8px; filter: drop-shadow(2px 2px 3px black);}
+        .th-icon-medium, .bh-icon-medium { width: 44px; height: 44px; margin-right: 8px; }
+        .progress-bar {
+            background: #1e2a3e;
+            border-radius: 20px;
+            height: 6px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #F5B042, #FFD966);
+            height: 100%;
+            border-radius: 20px;
+        }
+        .back-btn {
+            background: #2f3e62;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            color: white;
+            margin-top: 24px;
+            cursor: pointer;
+        }
+        .suggestion-item {
+            background: #0f1828;
+            margin-top: 12px;
+            padding: 16px 20px;
+            border-radius: 28px;
+            cursor: pointer;
+            transition: 0.1s;
+            border: 1px solid #2f3f5a;
+        }
+        .suggestion-item:hover { background: #F5A623; color: #0a0e1c; transform: scale(0.99);}
+        @media (max-width: 700px) {
+            .th-icon-micro, .bh-icon-micro { width: 26px; height: 26px; }
+        }
+        .white-outline {
+            background: #ffffff10;
+            border: 1px solid rgba(255,220,140,0.6);
+            color: white;
+            font-weight: 500;
         }
     </style>
 </head>
@@ -298,270 +284,274 @@
 <div class="container">
     <div class="header">
         <div class="header-left">
-            <h1>🏰 Clash of Clans Tracker</h1>
-            <p>Cari berdasarkan Tag atau Nama Klan | Th1-Th18.png | Bh1-Bh10.png</p>
-        </div>
-        <div class="icon-notice">
-            📁 Town Hall: /Th-Level/Th1.png ... Th18.png &nbsp;|&nbsp;
-            🏗️ Builder Hall: /Bh-Level/Bh1.png ... Bh10.png
+            <h1>⚔️ CLASH TRACKER</h1>
+            <div style="display: flex; gap: 12px; margin-top: 8px;">
+                <span class="badge-light">🏆 real-time data</span>
+                <span class="badge-light">🎯 cari tag / nama</span>
+            </div>
         </div>
     </div>
 
-    <!-- Status Bar -->
     <div class="status-bar">
-        <div class="status-item">📡 Panel: <span id="panelStatus" class="offline">● Offline</span></div>
-        <div class="status-item">🔑 Token: <span id="tokenStatus">-</span></div>
-        <button onclick="checkPanel()" style="background:#3b82f6; border:none; padding:4px 12px; border-radius:16px; font-size:11px; cursor:pointer;">Test</button>
+        <div class="status-item">📡 BACKEND: <span id="panelStatus" class="offline">● OFFLINE</span></div>
+        <div class="status-item">🔑 TOKEN: <span id="tokenStatus">—</span></div>
+        <button id="testPanelBtn" class="white-outline" style="background:#00000030; padding:5px 22px; border-radius:60px;">⟳ TEST</button>
     </div>
 
-    <!-- Single Tab: Unified Search (Tag atau Nama Klan) -->
-    <div class="card">
-        <div class="card-header"><h3>🔍 Cari Klan / Pemain</h3></div>
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Masukkan tag klan (#2PPUJ9C88) atau nama klan...">
-            <button onclick="unifiedSearch()">🔍 Cari</button>
+    <!-- TAB / NAVIGASI PISAH CLAN & PLAYER -->
+    <div style="display: flex; gap: 16px; margin-bottom: 28px; border-bottom: 1px solid #F5A62350; padding-bottom: 10px;">
+        <button id="tabClanBtn" style="background:#F5A623; border:none; padding: 8px 28px; border-radius: 40px; font-weight: bold; color:#111; box-shadow: 0 2px 6px black;">🏠 CLAN</button>
+        <button id="tabPlayerBtn" style="background:#2C3E66; border:none; padding: 8px 28px; border-radius: 40px; font-weight: bold; color:white; transition:0.1s;">🎮 PLAYER</button>
+    </div>
+
+    <!-- PANEL CLAN -->
+    <div id="clanPanel" class="glass-card" style="display: block;">
+        <div class="card-header">
+            <h3>🔍 CARI CLAN (tag / nama)</h3>
         </div>
-        <div id="unifiedResult" class="result-box empty-state">Masukkan tag atau nama klan untuk melihat info & anggota</div>
+        <div class="search-row">
+            <input type="text" id="clanSearchInput" placeholder="misal: #2PPUJ9C88  atau nama clan (indonesia)">
+            <button id="clanSearchBtn">CARI CLAN</button>
+        </div>
+        <div id="clanResultArea" class="result-box empty-state">✨ Masukkan tag clan atau nama ✨</div>
+    </div>
+
+    <!-- PANEL PLAYER (cari langsung tag pemain) -->
+    <div id="playerPanel" class="glass-card" style="display: none;">
+        <div class="card-header">
+            <h3>🎮 CARI PEMAIN (berdasarkan TAG)</h3>
+        </div>
+        <div class="search-row">
+            <input type="text" id="playerTagInput" placeholder="contoh: #8GU9R0V">
+            <button id="playerSearchBtn">CARI PEMAIN</button>
+        </div>
+        <div id="playerResultArea" class="result-box empty-state">🔎 Masukkan tag pemain (awali dengan #)</div>
     </div>
 </div>
 
 <script>
 const API_BASE = '/api/coc';
-let currentClanData = null;
-let currentMembers = [];
+let lastClanStore = null, lastMembersStore = null;
 
-// ========== ICON PATHS ==========
-// Town Hall : Th1.png ... Th18.png
-function getThIconUrl(level) {
-    if (!level || level < 1) return '/Th-Level/Th1.png';
-    if (level > 18) level = 18;
-    return `/Th-Level/Th${level}.png`;
-}
-function thIconSmall(lvl) { if (!lvl || lvl<1) return ''; return `<img src="${getThIconUrl(lvl)}" class="th-icon-micro" alt="TH${lvl}" title="Town Hall ${lvl}" onerror="this.style.display='none';">`; }
-function thIconMedium(lvl) { if (!lvl || lvl<1) return ''; return `<img src="${getThIconUrl(lvl)}" class="th-icon-medium" alt="TH${lvl}" title="Town Hall ${lvl}" onerror="this.style.display='none';">`; }
+// ---------- ICON (Th / Bh) ----------
+function getThIconUrl(lvl){ if(lvl<1) lvl=1; if(lvl>18) lvl=18; return `/Th-Level/Th${lvl}.png`; }
+function thIconSmall(lvl){ if(!lvl||lvl<1) return ''; return `<img src="${getThIconUrl(lvl)}" class="th-icon-micro" alt="TH${lvl}">`; }
+function thIconMedium(lvl){ if(!lvl||lvl<1) return ''; return `<img src="${getThIconUrl(lvl)}" class="th-icon-medium" alt="TH${lvl}">`; }
+function getBhIconUrl(lvl){ if(lvl<1) lvl=1; if(lvl>10) lvl=10; return `/Bh-Level/Bh${lvl}.png`; }
+function bhIconSmall(lvl){ if(!lvl||lvl<1) return ''; return `<img src="${getBhIconUrl(lvl)}" class="bh-icon-micro" alt="BH${lvl}">`; }
+function bhIconMedium(lvl){ if(!lvl||lvl<1) return ''; return `<img src="${getBhIconUrl(lvl)}" class="bh-icon-medium" alt="BH${lvl}">`; }
+function mapRole(r){ return { leader:'Pemimpin', coLeader:'Wakil', admin:'Elder', member:'Anggota' }[r]||r; }
+function translateAch(n){ let dict={ 'Bigger & Better':'Lebih Besar', 'Nice and Tidy':'Rapi Bersih','Gold Rush':'Emas','Heroic Heist':'Heroik','War Hero':'Pahlawan Perang'}; return dict[n]||n; }
 
-// Builder Hall : Bh1.png ... Bh10.png
-function getBhIconUrl(level) {
-    if (!level || level < 1) return '/Bh-Level/Bh1.png';
-    if (level > 10) level = 10;
-    return `/Bh-Level/Bh${level}.png`;
-}
-function bhIconSmall(lvl) { if (!lvl || lvl<1) return ''; return `<img src="${getBhIconUrl(lvl)}" class="bh-icon-micro" alt="BH${lvl}" title="Builder Hall ${lvl}" onerror="this.style.display='none';">`; }
-function bhIconMedium(lvl) { if (!lvl || lvl<1) return ''; return `<img src="${getBhIconUrl(lvl)}" class="bh-icon-medium" alt="BH${lvl}" title="Builder Hall ${lvl}" onerror="this.style.display='none';">`; }
-
-// Role mapping Indonesia
-function mapRole(roleEn) {
-    const map = { 'leader': 'Pemimpin', 'coLeader': 'Wakil Pemimpin', 'admin': 'Senior', 'member': 'Anggota' };
-    return map[roleEn] || roleEn;
-}
-function translateAchievement(nameEn) {
-    const dict = {
-        'Bigger & Better': 'Lebih Besar & Lebih Baik', 'Nice and Tidy': 'Rapi dan Bersih',
-        'Gold Rush': 'Demam Emas', 'Elixir Escapade': 'Petualangan Elixir',
-        'Heroic Heist': 'Pencurian Heroik', 'Conqueror': 'Penakluk',
-        'Unbreakable': 'Tak Terkalahkan', 'League All-Star': 'Bintang Liga',
-        'War Hero': 'Pahlawan Perang', 'Aggressive Capitalism': 'Kapitalisme Agresif',
-        'Sharing is Caring': 'Berbagi itu Peduli', 'Friend in Need': 'Teman dalam Kebutuhan',
-        'Games Champion': 'Juara Permainan', 'Champion Builder': 'Pembangun Juara',
-        'Clan Capital Enthusiast': 'Pecinta Ibu Kota', 'Well Seasoned': 'Berkualitas'
-    };
-    return dict[nameEn] || nameEn;
-}
-
-// ========== PANEL STATUS ==========
-async function checkPanel() {
-    const panelSpan = document.getElementById('panelStatus');
-    const tokenSpan = document.getElementById('tokenStatus');
-    panelSpan.innerHTML = '● Checking...';
-    try {
-        const res = await fetch(`${API_BASE}/status`);
-        const data = await res.json();
-        panelSpan.innerHTML = '<span class="online">● Online</span>';
-        tokenSpan.innerHTML = data.token ? '✅ Ada' : '❌ Tidak ada';
-    } catch (err) {
-        panelSpan.innerHTML = '<span class="offline">● Offline</span>';
-        tokenSpan.innerHTML = '❌ Gagal';
+// status panel
+async function checkPanel(){
+    try{
+        const res=await fetch(`${API_BASE}/status`);
+        const d=await res.json();
+        document.getElementById('panelStatus').innerHTML='<span class="online">● ONLINE</span>';
+        document.getElementById('tokenStatus').innerText=d.token?'✅ AKTIF':'❌ TIDAK ADA';
+    }catch(e){
+        document.getElementById('panelStatus').innerHTML='<span class="offline">● OFFLINE</span>';
+        document.getElementById('tokenStatus').innerText='⚠️ GAGAL';
     }
 }
+document.getElementById('testPanelBtn').addEventListener('click',checkPanel);
 
-// ========== UNIFIED SEARCH ==========
-async function unifiedSearch() {
-    let query = document.getElementById('searchInput').value.trim();
-    if (!query) return;
-    const div = document.getElementById('unifiedResult');
-    div.innerHTML = '<div class="loading">⏳ Mencari...</div>';
-    // Coba sebagai tag klan dulu (jika diawali # atau mengandung #)
-    let isTag = query.startsWith('#');
-    if (!isTag && query.includes('#')) isTag = true;
-    if (isTag) {
-        // treat as clan tag
-        let tag = query;
-        if (!tag.startsWith('#')) tag = '#' + tag;
-        await loadClanByTag(tag);
-    } else {
-        // treat as clan name -> search by name via clan list? API tidak ada endpoint search by name, fallback ke tag?
-        // kita coba gunakan search endpoint (tidak resmi) atau beri saran. Untuk kemudahan, kita langsung tanyakan ke user?
-        // Tapi sesuai permintaan: cari tag atau nama klan disatukan. Karena API tidak punya pencarian nama, kita bantu dengan mencoba asumsikan sebagai tag atau beri opsi.
-        div.innerHTML = `<div class="error">⚠️ Nama klan tidak bisa langsung dicari. Gunakan tag klan (contoh: #2PPUJ9C88). Jika ingin mencari berdasarkan nama, silakan cari tag-nya dulu.</div>`;
+// ======================== CLAN LOGIC (tag / nama) ========================
+async function searchClan() {
+    let query = document.getElementById('clanSearchInput').value.trim();
+    if(!query) return;
+    const resDiv = document.getElementById('clanResultArea');
+    if(query.startsWith('#')){
+        await loadClanByTag(query);
+        return;
+    }
+    // cari nama via clashspot
+    resDiv.innerHTML='<div class="loading">🔍 mencari clan berdasarkan nama ...</div>';
+    try{
+        const searchUrl=`https://www.clashspot.net/api/clans/search?name=${encodeURIComponent(query)}`;
+        const resp=await fetch(searchUrl);
+        const json=await resp.json();
+        if(json?.items?.length){
+            let html=`<div style="font-weight:bold; margin-bottom:12px;">🎯 Ditemukan ${json.items.length} clan:</div>`;
+            for(let c of json.items.slice(0,8)){
+                html+=`<div class="suggestion-item" onclick="loadClanByTag('${c.tag}')">
+                            🏰 <strong>${escapeHtml(c.name)}</strong> &nbsp; ${c.tag}<br>
+                            <span style="font-size:0.8rem;">Level ${c.clanLevel} · 👥 ${c.members}/50 · 🏆 ${c.clanPoints}</span>
+                        </div>`;
+            }
+            resDiv.innerHTML=html;
+        } else resDiv.innerHTML=`<div class="error">❌ Tidak ditemukan clan "${escapeHtml(query)}". Gunakan tag (#)</div>`;
+    }catch(err){
+        resDiv.innerHTML=`<div class="error">⚠️ Gagal mencari nama. Coba pakai tag langsung.</div>`;
     }
 }
-
-async function loadClanByTag(tag) {
-    const div = document.getElementById('unifiedResult');
-    div.innerHTML = '<div class="loading">⏳ Loading clan...</div>';
-    try {
-        const clanRes = await fetch(`${API_BASE}/clan?tag=${encodeURIComponent(tag)}`);
-        const clanData = await clanRes.json();
-        if (clanData.error) throw new Error(clanData.reason || 'Gagal ambil clan');
-        currentClanData = clanData;
-        const membersRes = await fetch(`${API_BASE}/members?tag=${encodeURIComponent(tag)}`);
-        const membersData = await membersRes.json();
-        if (membersData.error) throw new Error(membersData.reason || 'Gagal ambil anggota');
-        currentMembers = membersData.items || [];
-        displayClanAndMembers(clanData, currentMembers);
-    } catch (err) {
-        div.innerHTML = `<div class="error">❌ ${err.message}</div>`;
+window.loadClanByTag = async function(tag){
+    if(!tag.startsWith('#')) tag='#'+tag;
+    const div=document.getElementById('clanResultArea');
+    div.innerHTML='<div class="loading">⏳ mengambil data clan ...</div>';
+    try{
+        const clanRes=await fetch(`${API_BASE}/clan?tag=${encodeURIComponent(tag)}`);
+        const clan=await clanRes.json();
+        if(clan.error) throw new Error(clan.reason||'clan tidak ditemukan');
+        const membersRes=await fetch(`${API_BASE}/members?tag=${encodeURIComponent(tag)}`);
+        const memData=await membersRes.json();
+        lastClanStore=clan; lastMembersStore=memData.items||[];
+        renderClanDetail(clan,lastMembersStore);
+    }catch(err){
+        div.innerHTML=`<div class="error">❌ ${err.message}</div>`;
     }
-}
-
-function displayClanAndMembers(clan, members) {
-    const div = document.getElementById('unifiedResult');
-    let clanHtml = `
-        <div style="margin-bottom:24px;">
-            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
-                <strong style="font-size:20px;">${escapeHtml(clan.name)}</strong>
-                <span class="badge">${clan.tag}</span>
-                <span class="tag-copy" onclick="copyToClipboard('${clan.tag}')">📋 Copy Tag</span>
+};
+function renderClanDetail(clan,members){
+    const div=document.getElementById('clanResultArea');
+    let html=`
+        <div style="margin-bottom:28px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <span style="font-size:1.7rem; font-weight:800;">${escapeHtml(clan.name)}</span>
+                <span class="badge-clan">${clan.tag}</span>
+                <span class="tag-copy" onclick="copyToClipboard('${clan.tag}')">📋 copy tag</span>
             </div>
             <div class="flex-grid">
-                <div><span style="color:#94a3b8;">Level</span><br><strong>${clan.clanLevel}</strong></div>
-                <div><span style="color:#94a3b8;">Anggota</span><br><strong>${clan.members}/50</strong></div>
-                <div><span style="color:#94a3b8;">Trofi</span><br><strong>${clan.clanPoints?.toLocaleString()}</strong></div>
-                <div><span style="color:#94a3b8;">Win Streak</span><br><strong>${clan.warWinStreak}</strong></div>
+                <div><span style="color:#b9d0ff;">Level</span><br><strong>${clan.clanLevel}</strong></div>
+                <div><span style="color:#b9d0ff;">Anggota</span><br><strong>${clan.members}/50</strong></div>
+                <div><span style="color:#b9d0ff;">Trofi</span><br><strong>${clan.clanPoints?.toLocaleString()}</strong></div>
+                <div><span style="color:#b9d0ff;">Win Streak</span><br><strong>${clan.warWinStreak}</strong></div>
             </div>
-            <div>📍 ${clan.location?.name || '-'} | 🔒 ${clan.type}</div>
-            ${clan.description ? `<div style="margin-top:8px;">📝 ${escapeHtml(clan.description.substring(0, 100))}${clan.description.length > 100 ? '...' : ''}</div>` : ''}
+            <div>📍 ${clan.location?.name||'-'} · 🔒 ${clan.type==='inviteOnly'?'Undangan':clan.type==='open'?'Terbuka':'Tertutup'}</div>
+            ${clan.description?`<div style="margin-top:12px; background:#0f1825; border-radius:28px; padding:9px 16px;">📖 ${escapeHtml(clan.description.substring(0,110))}</div>`:''}
         </div>
-        <div><strong>👥 Anggota (${members.length})</strong></div>
-        <div class="table-wrapper">
-            <tr><thead><tr><th>No</th><th>Nama & TH/BH</th><th>Peran</th><th>🏆</th><th>Donasi</th></tr></thead><tbody>
-    `;
-    members.forEach((m, i) => {
-        const icon = { leader:'👑', coLeader:'⭐', admin:'🔹', member:'🟢' }[m.role] || '•';
-        const roleId = mapRole(m.role);
-        const thIcon = thIconSmall(m.townHallLevel);
-        // Builder Hall level tidak ada di member endpoint, hanya di player detail. sementara kita tidak tampilkan di daftar.
-        clanHtml += `<tr class="member-row" onclick='showMemberDetail("${m.tag.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}", "${escapeHtml(m.name).replace(/'/g, "\\'")}")'>
-            <td>${i+1}</td>
-            <td>${icon} ${escapeHtml(m.name)} ${thIcon} (TH${m.townHallLevel})</td>
-            <td>${roleId}</td>
-            <td>${m.trophies.toLocaleString()}</td>
-            <td>${m.donations.toLocaleString()}</td>
-        </tr>`;
+        <div><strong>👥 ANGGOTA (${members.length})</strong></div>
+        <div class="table-wrapper"><table><thead><tr><th>#</th><th>Nama / TH</th><th>Peran</th><th>🏆</th><th>Donasi</th></tr></thead><tbody>`;
+    members.forEach((m,i)=>{
+        const icon={ leader:'👑', coLeader:'⭐', admin:'🔹', member:'🟢' }[m.role]||'•';
+        html+=`<tr class="member-row" onclick="showPlayerDetail('${m.tag}')">
+                <td>${i+1}</td>
+                <td>${icon} ${escapeHtml(m.name)} ${thIconSmall(m.townHallLevel)} (TH${m.townHallLevel})</td>
+                <td>${mapRole(m.role)}</td>
+                <td>${m.trophies.toLocaleString()}</td>
+                <td>${m.donations.toLocaleString()}</td>
+               </tr>`;
     });
-    clanHtml += `</tbody></table></div><div style="margin-top:12px; text-align:center; font-size:11px;">✨ Klik anggota untuk lihat detail + pencapaian + Builder Hall ✨</div>`;
-    div.innerHTML = clanHtml;
+    html+=`</tbody></table></div><div style="margin-top:16px; text-align:center;">⭐ klik anggota untuk detail (achievement + builder hall)</div>`;
+    div.innerHTML=html;
 }
 
-// ========== MEMBER DETAIL (dengan Builder Hall icon) ==========
-async function showMemberDetail(tag, name) {
-    const div = document.getElementById('unifiedResult');
-    div.innerHTML = '<div class="loading">⏳ Loading profil...</div>';
-    try {
-        const res = await fetch(`${API_BASE}/player?tag=${encodeURIComponent(tag)}`);
-        const data = await res.json();
-        if (data.error) throw new Error(data.reason || 'Gagal');
-        
-        const thMedium = thIconMedium(data.townHallLevel);
-        const bhLevel = data.builderHallLevel || 0;
-        const bhMedium = bhIconMedium(bhLevel);
-        const builderTrophies = data.builderBaseTrophies || 0;
-        const builderBest = data.bestBuilderBaseTrophies || 0;
-        const versusWins = data.versusBattleWins || 0;
-
-        let achievementsHtml = '';
-        if (data.achievements && data.achievements.length) {
-            achievementsHtml = '<div style="margin-top:20px;"><strong>🏆 Pencapaian</strong><div style="margin-top:12px;">';
-            data.achievements.slice(0,15).forEach(ach => {
-                const percent = (ach.value / ach.target) * 100;
-                achievementsHtml += `
-                    <div style="margin-bottom:14px;">
-                        <div style="display:flex; justify-content:space-between; font-size:12px;">
-                            <span>${translateAchievement(ach.name)}</span>
-                            <span>${ach.value.toLocaleString()}/${ach.target.toLocaleString()}</span>
-                        </div>
-                        <div class="progress-bar"><div class="progress-fill" style="width:${percent}%;"></div></div>
-                    </div>
-                `;
-            });
-            achievementsHtml += '</div></div>';
-        } else {
-            achievementsHtml = '<div style="margin-top:20px;"><strong>🏆 Pencapaian</strong><div style="color:#64748b;">Belum ada achievement</div></div>';
-        }
-
-        let heroesHtml = '';
-        if (data.heroes && data.heroes.length) {
-            heroesHtml = '<div style="margin-top:20px;"><strong>🦸 Heroes</strong><div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;">';
-            data.heroes.forEach(h => {
-                if (h.village === 'home') {
-                    heroesHtml += `<div style="background:#1e293b; padding:8px 12px; border-radius:12px;"><strong>${h.name}</strong><br>Lv ${h.level}/${h.maxLevel}</div>`;
-                }
-            });
-            heroesHtml += '</div></div>';
-        }
-
-        div.innerHTML = `
-            <div>
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
-                    <strong style="font-size:20px;">🎮 ${escapeHtml(data.name)}</strong>
-                    <span class="tag-copy" onclick="copyToClipboard('${data.tag}')">📋 Copy Tag</span>
-                </div>
-                <div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
-                    <div class="player-badge">${thMedium} Town Hall ${data.townHallLevel}</div>
-                    ${bhLevel > 0 ? `<div class="player-badge">${bhMedium} Builder Hall ${bhLevel}</div>` : ''}
-                </div>
-                <div class="flex-grid">
-                    <div><span style="color:#94a3b8;">Level XP</span><br><strong>${data.expLevel}</strong></div>
-                    <div><span style="color:#94a3b8;">Trofi</span><br><strong>${data.trophies.toLocaleString()}</strong></div>
-                    <div><span style="color:#94a3b8;">Best Trofi</span><br><strong>${data.bestTrophies?.toLocaleString() || '-'}</strong></div>
-                    <div><span style="color:#94a3b8;">Bintang War</span><br><strong>${data.warStars}</strong></div>
-                    <div><span style="color:#94a3b8;">Donasi</span><br><strong>${data.donations.toLocaleString()}</strong></div>
-                    <div><span style="color:#94a3b8;">Donasi Terima</span><br><strong>${data.donationsReceived.toLocaleString()}</strong></div>
-                </div>
-                <div style="margin-top:16px; background:#1e293b; border-radius:16px; padding:12px;">
-                    <strong>🏗️ BASIS TUKANG</strong><br>
-                    Balai Tukang: ${bhLevel || 'Tidak memiliki'}<br>
-                    Trofi Tukang: ${builderTrophies.toLocaleString()} (Best: ${builderBest.toLocaleString()})<br>
-                    Kemenangan Versus: ${versusWins.toLocaleString()}
-                </div>
-                ${heroesHtml}
-                ${achievementsHtml}
-                <button class="back-btn" onclick="resetToEmpty()">← Kembali ke pencarian</button>
-            </div>
-        `;
-    } catch (err) {
-        div.innerHTML = `<div class="error">❌ ${err.message}</div>`;
+// ======================== PLAYER PANEL (cari tag langsung) ========================
+async function searchPlayerByTag(){
+    let tag=document.getElementById('playerTagInput').value.trim();
+    if(!tag) return;
+    if(!tag.startsWith('#')) tag='#'+tag;
+    const div=document.getElementById('playerResultArea');
+    div.innerHTML='<div class="loading">⏳ memuat pemain ...</div>';
+    try{
+        const res=await fetch(`${API_BASE}/player?tag=${encodeURIComponent(tag)}`);
+        const data=await res.json();
+        if(data.error) throw new Error(data.reason||'player tidak ditemukan');
+        renderPlayerDetail(data);
+    }catch(err){
+        div.innerHTML=`<div class="error">❌ ${err.message}</div>`;
     }
 }
-
-function resetToEmpty() {
-    document.getElementById('unifiedResult').innerHTML = '<div class="empty-state">Masukkan tag atau nama klan untuk memulai</div>';
-    currentClanData = null;
-    currentMembers = [];
+window.showPlayerDetail = async function(playerTag){
+    const activePanel = document.getElementById('playerPanel').style.display === 'none' ? 'clan' : 'player';
+    let containerDiv = (activePanel === 'clan') ? document.getElementById('clanResultArea') : document.getElementById('playerResultArea');
+    if(activePanel ==='clan') containerDiv = document.getElementById('clanResultArea');
+    else containerDiv = document.getElementById('playerResultArea');
+    containerDiv.innerHTML='<div class="loading">🔍 memuat profil ...</div>';
+    try{
+        const resp=await fetch(`${API_BASE}/player?tag=${encodeURIComponent(playerTag)}`);
+        const p=await resp.json();
+        if(p.error) throw new Error(p.reason);
+        renderPlayerDetail(p, containerDiv);
+    }catch(e){ containerDiv.innerHTML=`<div class="error">❌ ${e.message}</div>`; }
+};
+function renderPlayerDetail(data, targetDiv=null){
+    let div = targetDiv || document.getElementById('playerResultArea');
+    const thMed = thIconMedium(data.townHallLevel);
+    const bhLvl = data.builderHallLevel || 0;
+    const bhMed = bhIconMedium(bhLvl);
+    let achievementsHtml = '';
+    if(data.achievements?.length){
+        achievementsHtml='<div style="margin-top:26px;"><strong>🏆 PENCAPAIAN</strong><div style="margin-top:12px;">';
+        data.achievements.slice(0,14).forEach(a=>{
+            let percent=(a.value/a.target)*100;
+            achievementsHtml+=`
+                <div style="margin-bottom:14px;">
+                    <div style="display:flex; justify-content:space-between;">${translateAch(a.name)}<span>${a.value.toLocaleString()}/${a.target.toLocaleString()}</span></div>
+                    <div class="progress-bar"><div class="progress-fill" style="width:${percent}%"></div></div>
+                </div>`;
+        });
+        achievementsHtml+='</div></div>';
+    } else achievementsHtml='<div style="margin-top:20px;"><strong>🏆 Pencapaian</strong><div style="color:#95a9d4;">belum data achievement</div></div>';
+    let heroesHtml='';
+    if(data.heroes?.filter(h=>h.village==='home').length){
+        heroesHtml='<div style="margin-top:20px;"><strong>🦸 PAHLAWAN</strong><div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:12px;">';
+        data.heroes.forEach(h=>{ if(h.village==='home') heroesHtml+=`<div style="background:#101d2c; padding:6px 16px; border-radius:60px;"><strong>${h.name}</strong> Lv${h.level}/${h.maxLevel}</div>`; });
+        heroesHtml+='</div></div>';
+    }
+    div.innerHTML=`
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <span style="font-size:1.8rem; font-weight:800;">🎮 ${escapeHtml(data.name)}</span>
+            <span class="tag-copy" onclick="copyToClipboard('${data.tag}')">📋 copy tag</span>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:16px; margin: 22px 0 14px;">
+            <div class="player-badge">${thMed} Town Hall ${data.townHallLevel}</div>
+            ${bhLvl ? `<div class="player-badge">${bhMed} Builder Hall ${bhLvl}</div>` : ''}
+        </div>
+        <div class="flex-grid">
+            <div><span style="color:#b9d0ff;">XP Level</span><br><strong>${data.expLevel}</strong></div>
+            <div><span style="color:#b9d0ff;">🏆 Trofi</span><br><strong>${data.trophies.toLocaleString()}</strong></div>
+            <div><span style="color:#b9d0ff;">⭐ Bintang War</span><br><strong>${data.warStars}</strong></div>
+            <div><span style="color:#b9d0ff;">📦 Donasi</span><br><strong>${data.donations.toLocaleString()}</strong></div>
+            <div><span style="color:#b9d0ff;">📥 Diterima</span><br><strong>${data.donationsReceived.toLocaleString()}</strong></div>
+        </div>
+        <div style="background:#071126; border-radius:28px; padding:16px;">
+            <strong>🏗️ BASIS TUKANG</strong><br>
+            Balai Tukang: ${bhLvl || 'Tidak punya'} &nbsp;|&nbsp; Trofi Tukang: ${data.builderBaseTrophies?.toLocaleString() || 0}<br>
+            Best Builder: ${data.bestBuilderBaseTrophies?.toLocaleString() || '-'}
+        </div>
+        ${heroesHtml}
+        ${achievementsHtml}
+        <button class="back-btn" onclick="resetToDefault()">⟲ Kembali</button>
+    `;
 }
-
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text);
-    const notif = document.createElement('div');
-    notif.textContent = '✅ Tag disalin!';
-    notif.style.cssText = 'position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#f59e0b; color:#0f172a; padding:8px 20px; border-radius:40px; font-weight:bold; z-index:9999;';
-    document.body.appendChild(notif);
-    setTimeout(() => notif.remove(), 1500);
+function resetToDefault(){
+    if(document.getElementById('clanPanel').style.display !== 'none'){
+        document.getElementById('clanResultArea').innerHTML='<div class="empty-state">✨ Masukkan tag clan atau nama ✨</div>';
+    } else {
+        document.getElementById('playerResultArea').innerHTML='<div class="empty-state">🔎 Masukkan tag pemain (awali dengan #)</div>';
+    }
 }
-function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
+function copyToClipboard(t){ navigator.clipboard.writeText(t); alert('✅ Tag disalin');}
+function escapeHtml(s){ if(!s) return ''; return s.replace(/[&<>]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;' }[m])); }
 
+// tab switching + animasi
+const clanPanel=document.getElementById('clanPanel');
+const playerPanel=document.getElementById('playerPanel');
+document.getElementById('tabClanBtn').addEventListener('click',()=>{
+    clanPanel.style.display='block';
+    playerPanel.style.display='none';
+    document.getElementById('tabClanBtn').style.background='#F5A623';
+    document.getElementById('tabClanBtn').style.color='#111';
+    document.getElementById('tabPlayerBtn').style.background='#2C3E66';
+    document.getElementById('tabPlayerBtn').style.color='white';
+    resetToDefault();
+});
+document.getElementById('tabPlayerBtn').addEventListener('click',()=>{
+    clanPanel.style.display='none';
+    playerPanel.style.display='block';
+    document.getElementById('tabPlayerBtn').style.background='#F5A623';
+    document.getElementById('tabPlayerBtn').style.color='#111';
+    document.getElementById('tabClanBtn').style.background='#2C3E66';
+    document.getElementById('tabClanBtn').style.color='white';
+    resetToDefault();
+});
+document.getElementById('clanSearchBtn').addEventListener('click',searchClan);
+document.getElementById('playerSearchBtn').addEventListener('click',searchPlayerByTag);
+document.getElementById('clanSearchInput').addEventListener('keypress',e=>{if(e.key==='Enter') searchClan();});
+document.getElementById('playerTagInput').addEventListener('keypress',e=>{if(e.key==='Enter') searchPlayerByTag();});
 checkPanel();
-setInterval(checkPanel, 30000);
+setInterval(checkPanel,45000);
 </script>
 </body>
 </html>
